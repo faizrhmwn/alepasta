@@ -23,6 +23,7 @@ export default function InputPenjualan() {
   const [orderType, setOrderType] = useState('Takeaway')
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
+  const [spicyLevel, setSpicyLevel] = useState('Normal')
 
   // Cart
   const [cart, setCart] = useState([])
@@ -84,16 +85,26 @@ export default function InputPenjualan() {
       return
     }
 
-    // Prepare topping names for notes
+    // Prepare modifiers for notes
+    let modifiers = []
+    
+    if (selectedProductData.category.toLowerCase() === 'pasta' && spicyLevel !== 'Normal') {
+      modifiers.push(`Pedas: ${spicyLevel}`)
+    }
+
     const toppingNames = selectedToppings.map(id => {
       const t = toppingProducts.find(t => t.id === id)
       return t ? t.name : ''
     }).filter(Boolean)
 
-    let finalNotes = notes
     if (toppingNames.length > 0) {
-      const toppingText = `Topping: ${toppingNames.join(', ')}`
-      finalNotes = notes ? `${toppingText}. ${notes}` : toppingText
+      modifiers.push(`Topping: ${toppingNames.join(', ')}`)
+    }
+
+    let finalNotes = notes
+    if (modifiers.length > 0) {
+      const modifierText = modifiers.join(' | ')
+      finalNotes = notes ? `${modifierText}. ${notes}` : modifierText
     }
 
     const unitPrice = selectedProductData.price + currentToppingsPrice
@@ -117,6 +128,7 @@ export default function InputPenjualan() {
     setQuantity(1)
     setNotes('')
     setSelectedToppings([])
+    setSpicyLevel('Normal')
     showToast(`${selectedProductData.name} ditambahkan ke keranjang`, 'success')
   }
 
@@ -214,6 +226,7 @@ export default function InputPenjualan() {
                 onChange={(e) => {
                   setSelectedProduct(e.target.value)
                   setSelectedToppings([]) // Reset toppings when changing product
+                  setSpicyLevel('Normal') // Reset spicy level
                 }}
               >
                 <option value="">-- Pilih Produk --</option>
@@ -246,6 +259,23 @@ export default function InputPenjualan() {
                     </label>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Spiciness Level - Only for Pasta */}
+            {selectedProductData && selectedProductData.category.toLowerCase() === 'pasta' && (
+              <div className="form-group">
+                <label className="form-label">Level Pedas</label>
+                <select
+                  className="form-input"
+                  value={spicyLevel}
+                  onChange={(e) => setSpicyLevel(e.target.value)}
+                >
+                  <option value="Normal">Normal (Tidak Pedas)</option>
+                  <option value="Sedang">Sedang</option>
+                  <option value="Pedas">Pedas</option>
+                  <option value="Sangat Pedas">Sangat Pedas</option>
+                </select>
               </div>
             )}
 
@@ -397,7 +427,7 @@ export default function InputPenjualan() {
                           <td>
                             {sale.productName}
                             <span className="order-type-badge">{sale.orderType || 'Dine-in'}</span>
-                            {sale.notes && sale.notes.includes('Topping:') && (
+                            {sale.notes && (sale.notes.includes('Topping:') || sale.notes.includes('Pedas:')) && (
                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                                     {sale.notes}
                                 </div>
