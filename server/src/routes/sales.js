@@ -49,7 +49,7 @@ function fillDateRange(rows, from, to) {
 // ── POST / ── Create sale ───────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {
-    const { productId, quantity = 1, saleDate, notes } = req.body;
+    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0 } = req.body;
 
     if (!productId) {
       return res.status(400).json({ success: false, error: 'productId is required' });
@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Product not found' });
     }
 
-    const unitPrice = product.price;
+    const unitPrice = product.price + Number(toppingPrice);
     const totalPrice = unitPrice * Number(quantity);
 
     const [newSale] = await db

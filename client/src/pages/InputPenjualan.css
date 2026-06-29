@@ -359,6 +359,54 @@
   opacity: 0.7;
 }
 
+/* ── Toppings ─────────────────────────── */
+
+.toppings-group {
+  margin-top: 1rem;
+}
+
+.toppings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.topping-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.topping-item input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.topping-name {
+  flex-grow: 1;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.topping-price {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cart-item-toppings {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
 /* ── Responsive ───────────────────────── */
 
 @media (max-width: 900px) {

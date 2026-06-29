@@ -19,22 +19,33 @@ export default function InputPenjualan() {
   // Form state
   const [saleDate, setSaleDate] = useState(today)
   const [selectedProduct, setSelectedProduct] = useState('')
+  const [selectedToppings, setSelectedToppings] = useState([]) // Array of topping IDs
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
 
   // Cart
   const [cart, setCart] = useState([])
 
-  // Group products by category
-  const groupedProducts = products.reduce((acc, p) => {
+  // Separate main products and toppings
+  const mainProducts = products.filter(p => p.category !== 'topping')
+  const toppingProducts = products.filter(p => p.category === 'topping')
+
+  // Group main products by category
+  const groupedProducts = mainProducts.reduce((acc, p) => {
     if (!acc[p.category]) acc[p.category] = []
     acc[p.category].push(p)
     return acc
   }, {})
 
-  const selectedProductData = products.find(
+  const selectedProductData = mainProducts.find(
     (p) => p.id === Number(selectedProduct)
   )
+
+  // Calculate toppings price
+  const currentToppingsPrice = selectedToppings.reduce((sum, toppingId) => {
+    const topping = toppingProducts.find(t => t.id === toppingId)
+    return sum + (topping ? topping.price : 0)
+  }, 0)
 
   const cartTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0)
 
@@ -54,6 +65,14 @@ export default function InputPenjualan() {
       .finally(() => setLoading(false))
   }, [today])
 
+  function toggleTopping(toppingId) {
+    setSelectedToppings(prev => 
+      prev.includes(toppingId) 
+        ? prev.filter(id => id !== toppingId)
+        : [...prev, toppingId]
+    )
+  }
+
   function addToCart() {
     if (!selectedProductData) {
       showToast('Pilih produk terlebih dahulu', 'error')
@@ -64,21 +83,38 @@ export default function InputPenjualan() {
       return
     }
 
+    // Prepare topping names for notes
+    const toppingNames = selectedToppings.map(id => {
+      const t = toppingProducts.find(t => t.id === id)
+      return t ? t.name : ''
+    }).filter(Boolean)
+
+    let finalNotes = notes
+    if (toppingNames.length > 0) {
+      const toppingText = `Topping: ${toppingNames.join(', ')}`
+      finalNotes = notes ? `${toppingText}. ${notes}` : toppingText
+    }
+
+    const unitPrice = selectedProductData.price + currentToppingsPrice
+
     const cartItem = {
       id: Date.now(),
       productId: selectedProductData.id,
       productName: selectedProductData.name,
       category: selectedProductData.category,
-      unitPrice: selectedProductData.price,
+      unitPrice: unitPrice,
+      toppingPrice: currentToppingsPrice, // For backend
       quantity,
-      totalPrice: selectedProductData.price * quantity,
+      totalPrice: unitPrice * quantity,
       saleDate,
-      notes,
+      notes: finalNotes,
+      displayToppings: toppingNames // purely for UI display
     }
 
     setCart((prev) => [...prev, cartItem])
     setQuantity(1)
     setNotes('')
+    setSelectedToppings([])
     showToast(`${selectedProductData.name} ditambahkan ke keranjang`, 'success')
   }
 
@@ -97,6 +133,7 @@ export default function InputPenjualan() {
           quantity: item.quantity,
           saleDate: item.saleDate,
           notes: item.notes || undefined,
+          toppingPrice: item.toppingPrice || 0
         })
       }
       showToast(`${cart.length} penjualan berhasil disimpan! 🎉`, 'success')
@@ -158,7 +195,10 @@ export default function InputPenjualan() {
               <select
                 className="form-input"
                 value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
+                onChange={(e) => {
+                  setSelectedProduct(e.target.value)
+                  setSelectedToppings([]) // Reset toppings when changing product
+                }}
               >
                 <option value="">-- Pilih Produk --</option>
                 {Object.entries(groupedProducts).map(([cat, items]) => (
@@ -172,6 +212,26 @@ export default function InputPenjualan() {
                 ))}
               </select>
             </div>
+
+            {/* Toppings Section */}
+            {selectedProductData && toppingProducts.length > 0 && (
+              <div className="form-group toppings-group">
+                <label className="form-label">Topping (Opsional)</label>
+                <div className="toppings-list">
+                  {toppingProducts.map(t => (
+                    <label key={t.id} className="topping-item">
+                      <input 
+                        type="checkbox"
+                        checked={selectedToppings.includes(t.id)}
+                        onChange={() => toggleTopping(t.id)}
+                      />
+                      <span className="topping-name">{t.name}</span>
+                      <span className="topping-price">+{formatRupiah(t.price)}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="form-group">
               <label className="form-label">Jumlah</label>
@@ -209,15 +269,15 @@ export default function InputPenjualan() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                placeholder="Contoh: extra sauce, tanpa pedas..."
+                placeholder="Contoh: extra pedas..."
               />
             </div>
 
             {selectedProductData && (
               <div className="price-preview">
                 <div className="preview-row">
-                  <span>Harga satuan</span>
-                  <span>{formatRupiah(selectedProductData.price)}</span>
+                  <span>Harga satuan {selectedToppings.length > 0 ? '(+ Topping)' : ''}</span>
+                  <span>{formatRupiah(selectedProductData.price + currentToppingsPrice)}</span>
                 </div>
                 <div className="preview-row">
                   <span>Jumlah</span>
@@ -226,7 +286,7 @@ export default function InputPenjualan() {
                 <div className="preview-row preview-total">
                   <span>Total</span>
                   <span>
-                    {formatRupiah(selectedProductData.price * quantity)}
+                    {formatRupiah((selectedProductData.price + currentToppingsPrice) * quantity)}
                   </span>
                 </div>
               </div>
@@ -252,7 +312,12 @@ export default function InputPenjualan() {
                     <li key={item.id} className="cart-item">
                       <div className="cart-item-info">
                         <span className="cart-item-name">
-                          {item.productName}
+                          {item.productName} 
+                          {item.displayToppings && item.displayToppings.length > 0 && (
+                            <span className="cart-item-toppings">
+                              <br/>(+ {item.displayToppings.join(', ')})
+                            </span>
+                          )}
                         </span>
                         <span className="cart-item-detail">
                           {item.quantity}× {formatRupiah(item.unitPrice)} ={' '}
@@ -313,7 +378,14 @@ export default function InputPenjualan() {
                     <tbody>
                       {todaySales.records.map((sale) => (
                         <tr key={sale.id}>
-                          <td>{sale.productName}</td>
+                          <td>
+                            {sale.productName}
+                            {sale.notes && sale.notes.includes('Topping:') && (
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                    {sale.notes}
+                                </div>
+                            )}
+                          </td>
                           <td>
                             <span
                               className={`badge ${getCategoryBadgeClass(sale.category)}`}
