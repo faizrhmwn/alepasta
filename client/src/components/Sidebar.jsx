@@ -27,8 +27,7 @@ export default function Sidebar({ isOpen, onClose }) {
       />
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
-          <h1>ALEPASTA</h1>
-          <p>Your Daily Homemade Pasta</p>
+          <img src="/logo.png" alt="Alepasta Logo" className="sidebar-logo-img" />
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (

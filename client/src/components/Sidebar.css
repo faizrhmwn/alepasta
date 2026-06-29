@@ -21,23 +21,12 @@
   border-bottom: 1px solid var(--glass-border);
 }
 
-.sidebar-brand h1 {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-  letter-spacing: 0.02em;
-}
-
-.sidebar-brand p {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin: 0.25rem 0 0;
-  letter-spacing: 0.01em;
+.sidebar-logo-img {
+  max-width: 180px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
 }
 
 .sidebar-nav {
