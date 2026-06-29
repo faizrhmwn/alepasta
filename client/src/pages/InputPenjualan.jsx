@@ -49,7 +49,6 @@ export default function InputPenjualan() {
       .then(([prods, sales]) => {
         setProducts(prods)
         setTodaySales(sales)
-        if (prods.length > 0) setSelectedProduct(String(prods[0].id))
       })
       .catch((err) => showToast(err.message, 'error'))
       .finally(() => setLoading(false))
