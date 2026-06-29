@@ -20,7 +20,7 @@ export default function InputPenjualan() {
   const [saleDate, setSaleDate] = useState(today)
   const [selectedProduct, setSelectedProduct] = useState('')
   const [selectedToppings, setSelectedToppings] = useState([]) // Array of topping IDs
-  const [orderType, setOrderType] = useState('Dine-in')
+  const [orderType, setOrderType] = useState('Takeaway')
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
 
@@ -200,10 +200,8 @@ export default function InputPenjualan() {
                 value={orderType}
                 onChange={(e) => setOrderType(e.target.value)}
               >
-                <option value="Dine-in">🍽️ Dine-in</option>
                 <option value="Takeaway">🛍️ Takeaway</option>
-                <option value="Grab">🛵 GrabFood</option>
-                <option value="Gojek">🛵 GoFood</option>
+                <option value="GrabFood">🛵 GrabFood</option>
                 <option value="ShopeeFood">🛵 ShopeeFood</option>
               </select>
             </div>

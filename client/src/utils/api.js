@@ -81,6 +81,13 @@ export function postSale(data) {
   })
 }
 
+export function updateSale(id, data) {
+  return fetchAPI(`/sales/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+}
+
 export function deleteSale(id) {
   return fetchAPI(`/sales/${id}`, {
     method: 'DELETE',

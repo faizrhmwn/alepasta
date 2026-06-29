@@ -10,7 +10,7 @@ const router = Router();
 router.use(authMiddleware);
 
 // ── GET / ── List active products ───────────────────────────────────────────────
-router.get('/', async (_req, res) => {
+router.get('/', async (req, res) => {
   try {
     const includeAll = req.query.all === 'true';
     let query = db.select().from(products);

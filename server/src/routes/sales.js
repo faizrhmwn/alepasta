@@ -376,6 +376,51 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
+// ── PUT /:id ── Update sale ───────────────────────────────────────────────────────
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity, orderType, notes } = req.body;
+
+    const updates = {};
+    if (quantity !== undefined) {
+      // Need to fetch original unit_price to recalculate total_price
+      const [existingSale] = await db
+        .select()
+        .from(sales)
+        .where(eq(sales.id, Number(id)))
+        .limit(1);
+        
+      if (!existingSale) return res.status(404).json({ success: false, error: 'Sale not found' });
+      
+      updates.quantity = Number(quantity);
+      updates.totalPrice = existingSale.unitPrice * Number(quantity);
+    }
+    
+    if (orderType !== undefined) updates.orderType = orderType;
+    if (notes !== undefined) updates.notes = notes;
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ success: false, error: 'No fields to update' });
+    }
+
+    const [updatedSale] = await db
+      .update(sales)
+      .set(updates)
+      .where(eq(sales.id, Number(id)))
+      .returning();
+
+    if (!updatedSale) {
+      return res.status(404).json({ success: false, error: 'Sale not found' });
+    }
+
+    return res.json({ success: true, data: updatedSale });
+  } catch (err) {
+    console.error('Update sale error:', err);
+    return res.status(500).json({ success: false, error: 'Failed to update sale' });
+  }
+});
+
 // ── DELETE /:id ── Delete sale ───────────────────────────────────────────────────
 router.delete('/:id', async (req, res) => {
   try {
