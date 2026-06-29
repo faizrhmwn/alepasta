@@ -10,6 +10,7 @@ const pageTitles = {
   '/rekap-harian': 'Rekap Harian',
   '/rekap-bulanan': 'Rekap Bulanan',
   '/grafik': 'Grafik & Analisis',
+  '/kelola-menu': 'Kelola Menu',
 }
 
 export default function Layout() {

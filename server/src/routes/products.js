@@ -12,11 +12,14 @@ router.use(authMiddleware);
 // ── GET / ── List active products ───────────────────────────────────────────────
 router.get('/', async (_req, res) => {
   try {
-    const result = await db
-      .select()
-      .from(products)
-      .where(eq(products.isActive, true))
-      .orderBy(asc(products.category), asc(products.name));
+    const includeAll = req.query.all === 'true';
+    let query = db.select().from(products);
+    
+    if (!includeAll) {
+      query = query.where(eq(products.isActive, true));
+    }
+    
+    const result = await query.orderBy(asc(products.category), asc(products.name));
 
     return res.json({ success: true, data: result });
   } catch (err) {

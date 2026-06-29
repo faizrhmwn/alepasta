@@ -409,6 +409,18 @@
 
 /* ── Responsive ───────────────────────── */
 
+.order-type-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 2px 6px;
+  background: rgba(41, 128, 185, 0.15);
+  color: #2980B9;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
 @media (max-width: 900px) {
   .input-page {
     grid-template-columns: 1fr;

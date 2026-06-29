@@ -7,6 +7,7 @@ import InputPenjualan from './pages/InputPenjualan'
 import RekapHarian from './pages/RekapHarian'
 import RekapBulanan from './pages/RekapBulanan'
 import Grafik from './pages/Grafik'
+import KelolaMenu from './pages/KelolaMenu'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/rekap-harian" element={<RekapHarian />} />
           <Route path="/rekap-bulanan" element={<RekapBulanan />} />
           <Route path="/grafik" element={<Grafik />} />
+          <Route path="/kelola-menu" element={<KelolaMenu />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

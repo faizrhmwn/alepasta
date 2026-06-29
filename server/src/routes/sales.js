@@ -49,7 +49,7 @@ function fillDateRange(rows, from, to) {
 // ── POST / ── Create sale ───────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {
-    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0 } = req.body;
+    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in' } = req.body;
 
     if (!productId) {
       return res.status(400).json({ success: false, error: 'productId is required' });
@@ -77,6 +77,7 @@ router.post('/', async (req, res) => {
         unitPrice,
         totalPrice,
         saleDate: saleDate || todayJakarta(),
+        orderType,
         notes: notes || null,
       })
       .returning();
@@ -127,6 +128,7 @@ router.get('/daily', async (req, res) => {
         unitPrice: sales.unitPrice,
         totalPrice: sales.totalPrice,
         saleDate: sales.saleDate,
+        orderType: sales.orderType,
         notes: sales.notes,
         createdAt: sales.createdAt,
       })
@@ -321,6 +323,7 @@ router.get('/dashboard', async (req, res) => {
         quantity: sales.quantity,
         totalPrice: sales.totalPrice,
         saleDate: sales.saleDate,
+        orderType: sales.orderType,
         notes: sales.notes,
         createdAt: sales.createdAt,
       })

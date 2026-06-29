@@ -174,8 +174,18 @@
 }
 
 .recent-sale-name {
-  font-size: 0.875rem;
+  font-weight: 600;
+  font-size: 0.95rem;
   color: var(--text-primary);
+}
+
+.order-type-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  background: rgba(41, 128, 185, 0.15);
+  color: #2980B9;
+  border-radius: 4px;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

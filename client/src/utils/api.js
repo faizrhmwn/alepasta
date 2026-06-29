@@ -28,9 +28,35 @@ export function login(username, password) {
   })
 }
 
-export function getProducts() {
-  return fetchAPI('/products')
+// ── Products ─────────────────────────────────────────────────────────────
+
+export function getProducts(includeAll = false) {
+  const query = includeAll ? '?all=true' : ''
+  return fetchAPI(`/products${query}`)
 }
+
+export function createProduct(data) {
+  return fetchAPI('/products', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+}
+
+export function updateProduct(id, data) {
+  return fetchAPI(`/products/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+}
+
+export function toggleProductActive(id, isActive) {
+  return fetchAPI(`/products/${id}/toggle`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isActive }),
+  })
+}
+
+// ── Sales ────────────────────────────────────────────────────────────────
 
 export function getDashboard() {
   return fetchAPI('/sales/dashboard')

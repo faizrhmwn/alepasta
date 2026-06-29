@@ -20,6 +20,7 @@ export default function InputPenjualan() {
   const [saleDate, setSaleDate] = useState(today)
   const [selectedProduct, setSelectedProduct] = useState('')
   const [selectedToppings, setSelectedToppings] = useState([]) // Array of topping IDs
+  const [orderType, setOrderType] = useState('Dine-in')
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
 
@@ -107,6 +108,7 @@ export default function InputPenjualan() {
       quantity,
       totalPrice: unitPrice * quantity,
       saleDate,
+      orderType,
       notes: finalNotes,
       displayToppings: toppingNames // purely for UI display
     }
@@ -132,6 +134,7 @@ export default function InputPenjualan() {
           productId: item.productId,
           quantity: item.quantity,
           saleDate: item.saleDate,
+          orderType: item.orderType,
           notes: item.notes || undefined,
           toppingPrice: item.toppingPrice || 0
         })
@@ -188,6 +191,21 @@ export default function InputPenjualan() {
                 value={saleDate}
                 onChange={(e) => setSaleDate(e.target.value)}
               />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Tipe Pesanan</label>
+              <select
+                className="form-input"
+                value={orderType}
+                onChange={(e) => setOrderType(e.target.value)}
+              >
+                <option value="Dine-in">🍽️ Dine-in</option>
+                <option value="Takeaway">🛍️ Takeaway</option>
+                <option value="Grab">🛵 GrabFood</option>
+                <option value="Gojek">🛵 GoFood</option>
+                <option value="ShopeeFood">🛵 ShopeeFood</option>
+              </select>
             </div>
 
             <div className="form-group">
@@ -380,6 +398,7 @@ export default function InputPenjualan() {
                         <tr key={sale.id}>
                           <td>
                             {sale.productName}
+                            <span className="order-type-badge">{sale.orderType || 'Dine-in'}</span>
                             {sale.notes && sale.notes.includes('Topping:') && (
                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                                     {sale.notes}

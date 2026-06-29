@@ -7,6 +7,7 @@ const navItems = [
   { path: '/rekap-harian', icon: '📋', label: 'Rekap Harian' },
   { path: '/rekap-bulanan', icon: '📅', label: 'Rekap Bulanan' },
   { path: '/grafik', icon: '📈', label: 'Grafik' },
+  { path: '/kelola-menu', icon: '🍔', label: 'Kelola Menu' },
 ]
 
 export default function Sidebar({ isOpen, onClose }) {

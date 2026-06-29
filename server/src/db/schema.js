@@ -37,6 +37,7 @@ export const sales = pgTable('sales', {
   unitPrice: integer('unit_price').notNull(),
   totalPrice: integer('total_price').notNull(),
   saleDate: date('sale_date').notNull().defaultNow(),
+  orderType: varchar('order_type', { length: 50 }).default('Dine-in'),
   notes: text('notes'),
   createdAt: timestamp('created_at').defaultNow(),
 });

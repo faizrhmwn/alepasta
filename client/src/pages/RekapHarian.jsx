@@ -183,7 +183,10 @@ export default function RekapHarian() {
                       {rec.category}
                     </span>
                     <div>
-                      <div className="record-name">{rec.productName}</div>
+                      <div className="record-name">
+                        {rec.productName}
+                        <span className="order-type-badge">{rec.orderType || 'Dine-in'}</span>
+                      </div>
                       {rec.notes && (
                         <div className="record-notes">{rec.notes}</div>
                       )}

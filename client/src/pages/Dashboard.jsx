@@ -209,7 +209,12 @@ export default function Dashboard() {
                   >
                     {sale.category}
                   </span>
-                  <span className="recent-sale-name">{sale.productName}</span>
+                  <span className="recent-sale-name">
+                    {sale.productName}
+                    <span className="order-type-badge" style={{ marginLeft: '0.5rem', fontSize: '0.65rem' }}>
+                      {sale.orderType || 'Dine-in'}
+                    </span>
+                  </span>
                 </div>
                 <div className="recent-sale-detail">
                   <div className="recent-sale-qty">{sale.quantity}x</div>

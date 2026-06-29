@@ -1,0 +1,203 @@
+import { useState, useEffect } from 'react'
+import { getProducts, createProduct, updateProduct, toggleProductActive } from '../utils/api'
+import { formatRupiah, getCategoryBadgeClass } from '../utils/format'
+import { showToast } from '../utils/toast'
+import './KelolaMenu.css'
+
+export default function KelolaMenu() {
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  // Form State
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [formData, setFormData] = useState({ name: '', price: '', category: 'makanan' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  function fetchProducts() {
+    setLoading(true)
+    getProducts(true) // includeAll = true
+      .then(setProducts)
+      .catch((err) => showToast(err.message, 'error'))
+      .finally(() => setLoading(false))
+  }
+
+  function handleOpenModal(product = null) {
+    if (product) {
+      setEditingId(product.id)
+      setFormData({ name: product.name, price: product.price, category: product.category })
+    } else {
+      setEditingId(null)
+      setFormData({ name: '', price: '', category: 'makanan' })
+    }
+    setIsModalOpen(true)
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false)
+    setEditingId(null)
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!formData.name || !formData.price) {
+      showToast('Nama dan harga harus diisi', 'error')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      if (editingId) {
+        await updateProduct(editingId, formData)
+        showToast('Produk berhasil diperbarui', 'success')
+      } else {
+        await createProduct(formData)
+        showToast('Produk baru berhasil ditambahkan', 'success')
+      }
+      handleCloseModal()
+      fetchProducts()
+    } catch (err) {
+      showToast(err.message, 'error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  async function handleToggleActive(id, currentStatus) {
+    if (!window.confirm(`Yakin ingin ${currentStatus ? 'menonaktifkan' : 'mengaktifkan'} produk ini?`)) return
+    
+    try {
+      await toggleProductActive(id, !currentStatus)
+      showToast(`Produk berhasil di${!currentStatus ? 'aktifkan' : 'nonaktifkan'}`, 'success')
+      fetchProducts()
+    } catch (err) {
+      showToast(err.message, 'error')
+    }
+  }
+
+  return (
+    <div className="animate-in kelola-menu-page">
+      <div className="kelola-header">
+        <h2 className="page-title">🍔 Kelola Menu</h2>
+        <button className="btn btn-primary btn-add-menu" onClick={() => handleOpenModal()}>
+          + Tambah Produk
+        </button>
+      </div>
+
+      <div className="glass-card">
+        {loading ? (
+          <div className="skeleton" style={{ height: 300, borderRadius: 'var(--radius-md)' }} />
+        ) : (
+          <div className="table-wrapper">
+            <table className="glass-table">
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Kategori</th>
+                  <th style={{ textAlign: 'right' }}>Harga</th>
+                  <th style={{ textAlign: 'center' }}>Status</th>
+                  <th style={{ textAlign: 'right' }}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.length > 0 ? (
+                  products.map((p) => (
+                    <tr key={p.id} className={!p.isActive ? 'inactive-row' : ''}>
+                      <td>{p.name}</td>
+                      <td>
+                        <span className={`badge ${getCategoryBadgeClass(p.category)}`}>
+                          {p.category}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right' }}>{formatRupiah(p.price)}</td>
+                      <td style={{ textAlign: 'center' }}>
+                        <span className={`status-badge ${p.isActive ? 'active' : 'inactive'}`}>
+                          {p.isActive ? 'Aktif' : 'Nonaktif'}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        <div className="action-buttons">
+                          <button className="btn-action edit" onClick={() => handleOpenModal(p)} title="Edit">
+                            ✏️
+                          </button>
+                          <button 
+                            className={`btn-action ${p.isActive ? 'delete' : 'restore'}`} 
+                            onClick={() => handleToggleActive(p.id, p.isActive)}
+                            title={p.isActive ? 'Nonaktifkan' : 'Aktifkan'}
+                          >
+                            {p.isActive ? '🚫' : '✅'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>Belum ada produk.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Modal Form */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content animate-in" onClick={(e) => e.stopPropagation()}>
+            <h3 className="modal-title">{editingId ? 'Edit Produk' : 'Tambah Produk Baru'}</h3>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="form-label">Nama Produk</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Harga (Rp)</label>
+                <input 
+                  type="number" 
+                  className="form-input" 
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: e.target.value})}
+                  required
+                  min="0"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Kategori</label>
+                <select 
+                  className="form-input"
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                >
+                  <option value="makanan">Makanan</option>
+                  <option value="minuman">Minuman</option>
+                  <option value="side">Side Dish</option>
+                  <option value="topping">Topping</option>
+                </select>
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn btn-ghost" onClick={handleCloseModal}>
+                  Batal
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                  {isSubmitting ? 'Menyimpan...' : 'Simpan'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
