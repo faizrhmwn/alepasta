@@ -1,0 +1,81 @@
+/* ============================================
+   GRAFIK PAGE STYLES
+   ============================================ */
+
+.grafik-filter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.grafik-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.grafik-filter-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.grafik-presets {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.grafik-toggle {
+  display: flex;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+.grafik-toggle-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+}
+
+.grafik-toggle-btn:hover {
+  color: var(--text-primary);
+  background: var(--overlay-3);
+}
+
+.grafik-toggle-btn.active {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.grafik-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.grafik-chart-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .grafik-filter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

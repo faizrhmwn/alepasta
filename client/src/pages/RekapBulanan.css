@@ -1,0 +1,47 @@
+/* ============================================
+   REKAP BULANAN STYLES
+   ============================================ */
+
+.monthly-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.monthly-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.monthly-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.highlight-row td {
+  background: rgba(241, 196, 15, 0.06) !important;
+}
+
+@media (max-width: 1024px) {
+  .monthly-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .monthly-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .monthly-sections {
+    grid-template-columns: 1fr;
+  }
+}
