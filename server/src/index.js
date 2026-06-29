@@ -9,10 +9,9 @@ import salesRoutes from './routes/sales.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL : true,
+    origin: ['http://localhost:5173', 'https://rekap-alepasta.vercel.app', process.env.CLIENT_URL].filter(Boolean),
     credentials: true,
   })
 );
