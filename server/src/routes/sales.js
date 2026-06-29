@@ -199,6 +199,19 @@ router.get('/monthly', async (req, res) => {
       .groupBy(sales.productId, products.name, products.category)
       .orderBy(desc(sum(sales.totalPrice)));
 
+    // Payment breakdown
+    const paymentBreakdownRows = await db
+      .select({
+        paymentMethod: sales.paymentMethod,
+        revenue: sum(sales.totalPrice).mapWith(Number)
+      })
+      .from(sales)
+      .where(between(sales.saleDate, startDate, endDate))
+      .groupBy(sales.paymentMethod);
+      
+    const totalCash = paymentBreakdownRows.find(r => r.paymentMethod === 'Cash')?.revenue || 0;
+    const totalQris = paymentBreakdownRows.find(r => r.paymentMethod === 'QRIS')?.revenue || 0;
+
     // Summary
     const totalRevenue = dailyBreakdown.reduce((s, d) => s + d.revenue, 0);
     const totalItems = dailyBreakdown.reduce((s, d) => s + d.items, 0);
@@ -211,7 +224,7 @@ router.get('/monthly', async (req, res) => {
         month,
         dailyBreakdown,
         productBreakdown,
-        summary: { totalRevenue, totalItems, avgPerDay, daysWithSales },
+        summary: { totalRevenue, totalItems, avgPerDay, daysWithSales, totalCash, totalQris },
       },
     });
   } catch (err) {

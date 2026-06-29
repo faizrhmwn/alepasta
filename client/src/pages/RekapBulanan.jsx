@@ -88,6 +88,7 @@ export default function RekapBulanan() {
               icon="💰"
               title="Total Pendapatan"
               value={formatRupiah(summary.totalRevenue)}
+              subtitle={`Cash: ${formatRupiah(summary.totalCash || 0)} | QRIS: ${formatRupiah(summary.totalQris || 0)}`}
               delay={0}
             />
             <StatCard
