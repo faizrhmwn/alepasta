@@ -21,6 +21,7 @@ export default function InputPenjualan() {
   const [selectedProduct, setSelectedProduct] = useState('')
   const [selectedToppings, setSelectedToppings] = useState([]) // Array of topping IDs
   const [orderType, setOrderType] = useState('Takeaway')
+  const [paymentMethod, setPaymentMethod] = useState('Cash')
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
   const [spicyLevel, setSpicyLevel] = useState('Tidak Pedas')
@@ -120,6 +121,7 @@ export default function InputPenjualan() {
       totalPrice: unitPrice * quantity,
       saleDate,
       orderType,
+      paymentMethod,
       notes: finalNotes,
       displayToppings: toppingNames // purely for UI display
     }
@@ -147,6 +149,7 @@ export default function InputPenjualan() {
           quantity: item.quantity,
           saleDate: item.saleDate,
           orderType: item.orderType,
+          paymentMethod: item.paymentMethod,
           notes: item.notes || undefined,
           toppingPrice: item.toppingPrice || 0
         })
@@ -215,6 +218,18 @@ export default function InputPenjualan() {
                 <option value="Takeaway">🛍️ Takeaway</option>
                 <option value="GrabFood">🛵 GrabFood</option>
                 <option value="ShopeeFood">🛵 ShopeeFood</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Metode Pembayaran</label>
+              <select
+                className="form-input"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              >
+                <option value="Cash">💵 Cash / Tunai</option>
+                <option value="QRIS">📱 QRIS / Transfer</option>
               </select>
             </div>
 
@@ -426,6 +441,9 @@ export default function InputPenjualan() {
                           <td>
                             {sale.productName}
                             <span className="order-type-badge">{sale.orderType || 'Dine-in'}</span>
+                            <span className="order-type-badge" style={{ marginLeft: '4px', background: sale.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
+                              {sale.paymentMethod || 'Cash'}
+                            </span>
                             {sale.notes && (sale.notes.includes('Topping:') || sale.notes.includes('Pedas:')) && (
                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                                     {sale.notes}

@@ -20,7 +20,7 @@ export default function RekapHarian() {
 
   // Edit State
   const [editingSale, setEditingSale] = useState(null)
-  const [editForm, setEditForm] = useState({ quantity: 1, orderType: 'Takeaway', notes: '' })
+  const [editForm, setEditForm] = useState({ quantity: 1, orderType: 'Takeaway', paymentMethod: 'Cash', notes: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const fetchRecap = () => {
@@ -73,6 +73,7 @@ export default function RekapHarian() {
     setEditForm({
       quantity: sale.quantity,
       orderType: sale.orderType || 'Takeaway',
+      paymentMethod: sale.paymentMethod || 'Cash',
       notes: sale.notes || '',
     })
   }
@@ -139,18 +140,35 @@ export default function RekapHarian() {
               delay={0}
             />
             <StatCard
+              icon="💵"
+              title="Tunai / Cash"
+              value={formatRupiah(summary.totalCash || 0)}
+              delay={100}
+              color="#27AE60"
+            />
+            <StatCard
+              icon="📱"
+              title="QRIS / Digital"
+              value={formatRupiah(summary.totalQris || 0)}
+              delay={200}
+              color="#8E44AD"
+            />
+          </div>
+          
+          <div className="rekap-stats" style={{ marginTop: '1rem' }}>
+            <StatCard
               icon="📦"
               title="Total Item"
               value={`${summary.totalItems || 0} item`}
-              delay={100}
+              delay={300}
               color="#3498DB"
             />
             <StatCard
               icon="🧾"
               title="Total Transaksi"
               value={`${summary.totalTransactions || 0} transaksi`}
-              delay={200}
-              color="#27AE60"
+              delay={400}
+              color="#E67E22"
             />
           </div>
 
@@ -230,6 +248,9 @@ export default function RekapHarian() {
                       <div className="record-name">
                         {rec.productName}
                         <span className="order-type-badge">{rec.orderType || 'Dine-in'}</span>
+                        <span className="order-type-badge" style={{ marginLeft: '4px', background: rec.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
+                          {rec.paymentMethod || 'Cash'}
+                        </span>
                       </div>
                       {rec.notes && (
                         <div className="record-notes">{rec.notes}</div>
@@ -276,6 +297,17 @@ export default function RekapHarian() {
                   <option value="Takeaway">🛍️ Takeaway</option>
                   <option value="GrabFood">🛵 GrabFood</option>
                   <option value="ShopeeFood">🛵 ShopeeFood</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Metode Pembayaran</label>
+                <select
+                  className="form-input"
+                  value={editForm.paymentMethod}
+                  onChange={(e) => setEditForm({...editForm, paymentMethod: e.target.value})}
+                >
+                  <option value="Cash">💵 Cash</option>
+                  <option value="QRIS">📱 QRIS</option>
                 </select>
               </div>
               <div className="form-group">

@@ -93,6 +93,7 @@ export default function Dashboard() {
           icon="💰"
           title="Pendapatan Hari Ini"
           value={formatRupiah(todayData?.revenue)}
+          subtitle={`Cash: ${formatRupiah(todayData?.totalCash || 0)} | QRIS: ${formatRupiah(todayData?.totalQris || 0)}`}
           delay={0}
         />
         <StatCard

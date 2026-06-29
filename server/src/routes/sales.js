@@ -49,7 +49,7 @@ function fillDateRange(rows, from, to) {
 // ── POST / ── Create sale ───────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {
-    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in' } = req.body;
+    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in', paymentMethod = 'Cash' } = req.body;
 
     if (!productId) {
       return res.status(400).json({ success: false, error: 'productId is required' });
@@ -78,6 +78,7 @@ router.post('/', async (req, res) => {
         totalPrice,
         saleDate: saleDate || todayJakarta(),
         orderType,
+        paymentMethod,
         notes: notes || null,
       })
       .returning();
@@ -129,6 +130,7 @@ router.get('/daily', async (req, res) => {
         totalPrice: sales.totalPrice,
         saleDate: sales.saleDate,
         orderType: sales.orderType,
+        paymentMethod: sales.paymentMethod,
         notes: sales.notes,
         createdAt: sales.createdAt,
       })
@@ -141,6 +143,8 @@ router.get('/daily', async (req, res) => {
     const totalRevenue = items.reduce((s, i) => s + i.totalPrice, 0);
     const totalItems = items.reduce((s, i) => s + i.quantity, 0);
     const totalTransactions = records.length;
+    const totalCash = records.filter(r => r.paymentMethod === 'Cash').reduce((s, r) => s + r.totalPrice, 0);
+    const totalQris = records.filter(r => r.paymentMethod === 'QRIS').reduce((s, r) => s + r.totalPrice, 0);
 
     return res.json({
       success: true,
@@ -148,7 +152,7 @@ router.get('/daily', async (req, res) => {
         date,
         items,
         records,
-        summary: { totalRevenue, totalItems, totalTransactions },
+        summary: { totalRevenue, totalItems, totalTransactions, totalCash, totalQris },
       },
     });
   } catch (err) {
@@ -285,6 +289,19 @@ router.get('/dashboard', async (req, res) => {
 
     const todayStats = todayStatsRows[0] || { revenue: 0, items: 0, transactions: 0 };
 
+    // Payment breakdown today
+    const paymentBreakdownRows = await db
+      .select({
+        paymentMethod: sales.paymentMethod,
+        revenue: sum(sales.totalPrice).mapWith(Number)
+      })
+      .from(sales)
+      .where(eq(sales.saleDate, today))
+      .groupBy(sales.paymentMethod);
+      
+    const totalCash = paymentBreakdownRows.find(r => r.paymentMethod === 'Cash')?.revenue || 0;
+    const totalQris = paymentBreakdownRows.find(r => r.paymentMethod === 'QRIS')?.revenue || 0;
+
     // This month stats
     const monthEnd = today; // up to today
     const monthStatsRows = await db
@@ -324,6 +341,7 @@ router.get('/dashboard', async (req, res) => {
         totalPrice: sales.totalPrice,
         saleDate: sales.saleDate,
         orderType: sales.orderType,
+        paymentMethod: sales.paymentMethod,
         notes: sales.notes,
         createdAt: sales.createdAt,
       })
@@ -358,6 +376,8 @@ router.get('/dashboard', async (req, res) => {
           revenue: todayStats.revenue || 0,
           items: todayStats.items || 0,
           transactions: todayStats.transactions || 0,
+          totalCash,
+          totalQris,
         },
         thisMonth: {
           month: today.slice(0, 7),
@@ -380,7 +400,7 @@ router.get('/dashboard', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { quantity, orderType, notes } = req.body;
+    const { quantity, orderType, notes, paymentMethod } = req.body;
 
     const updates = {};
     if (quantity !== undefined) {
@@ -398,6 +418,7 @@ router.put('/:id', async (req, res) => {
     }
     
     if (orderType !== undefined) updates.orderType = orderType;
+    if (paymentMethod !== undefined) updates.paymentMethod = paymentMethod;
     if (notes !== undefined) updates.notes = notes;
 
     if (Object.keys(updates).length === 0) {
