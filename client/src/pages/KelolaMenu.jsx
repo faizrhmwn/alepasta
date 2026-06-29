@@ -11,7 +11,7 @@ export default function KelolaMenu() {
   // Form State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  const [formData, setFormData] = useState({ name: '', price: '', category: 'makanan' })
+  const [formData, setFormData] = useState({ name: '', price: '', category: 'pasta' })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function KelolaMenu() {
       setFormData({ name: product.name, price: product.price, category: product.category })
     } else {
       setEditingId(null)
-      setFormData({ name: '', price: '', category: 'makanan' })
+      setFormData({ name: '', price: '', category: 'pasta' })
     }
     setIsModalOpen(true)
   }
@@ -180,9 +180,12 @@ export default function KelolaMenu() {
                   value={formData.category}
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
                 >
-                  <option value="makanan">Makanan</option>
-                  <option value="minuman">Minuman</option>
-                  <option value="side">Side Dish</option>
+                  <option value="alacarte">Ala Carte</option>
+                  <option value="beverage">Beverage</option>
+                  <option value="pasta">Pasta</option>
+                  <option value="rice">Rice</option>
+                  <option value="salad">Salad</option>
+                  <option value="side">Side</option>
                   <option value="topping">Topping</option>
                 </select>
               </div>
