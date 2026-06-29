@@ -39,6 +39,11 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🍝 Alepasta API running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🍝 Alepasta API running on http://localhost:${PORT}`);
+  });
+}
+
+// Export for Vercel Serverless
+export default app;
