@@ -6,13 +6,14 @@ import {
   formatRupiah,
   formatDate,
   getCategoryBadgeClass,
+  getToday,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './RekapHarian.css'
 
 export default function RekapHarian() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const initialDate = searchParams.get('date') || new Date().toISOString().split('T')[0]
+  const initialDate = searchParams.get('date') || getToday()
 
   const [selectedDate, setSelectedDate] = useState(initialDate)
   const [data, setData] = useState(null)
@@ -38,7 +39,7 @@ export default function RekapHarian() {
   function changeDate(offset) {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + offset)
-    const newDate = d.toISOString().split('T')[0]
+    const newDate = d.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' })
     setSelectedDate(newDate)
     setSearchParams({ date: newDate }, { replace: true })
   }
@@ -50,7 +51,7 @@ export default function RekapHarian() {
     setSearchParams({ date: newDate }, { replace: true })
   }
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = getToday()
   const isToday = selectedDate === today
 
   const summary = data?.summary || {}

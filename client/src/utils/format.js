@@ -3,6 +3,10 @@ export function formatRupiah(num) {
   return 'Rp ' + Number(num).toLocaleString('id-ID')
 }
 
+export function getToday() {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' })
+}
+
 export function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('id-ID', {
     weekday: 'long',

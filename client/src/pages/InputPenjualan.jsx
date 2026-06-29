@@ -4,12 +4,13 @@ import {
   formatRupiah,
   formatDate,
   getCategoryBadgeClass,
+  getToday,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './InputPenjualan.css'
 
 export default function InputPenjualan() {
-  const today = new Date().toISOString().split('T')[0]
+  const today = getToday()
 
   const [products, setProducts] = useState([])
   const [todaySales, setTodaySales] = useState(null)

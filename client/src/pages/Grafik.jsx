@@ -16,6 +16,7 @@ import {
   formatRupiah,
   formatDateShort,
   getCategoryColor,
+  getToday,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './Grafik.css'
@@ -53,14 +54,15 @@ function BarTooltip({ active, payload, viewMode }) {
 }
 
 export default function Grafik() {
-  const today = new Date()
-  const defaultFrom = new Date(today)
+  const today = getToday()
+  
+  // Default range: 7 days ago to today
+  const defaultFrom = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Jakarta' }))
   defaultFrom.setDate(defaultFrom.getDate() - 6)
+  const defaultFromStr = defaultFrom.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' })
 
-  const [dateFrom, setDateFrom] = useState(
-    defaultFrom.toISOString().split('T')[0]
-  )
-  const [dateTo, setDateTo] = useState(today.toISOString().split('T')[0])
+  const [dateFrom, setDateFrom] = useState(defaultFromStr)
+  const [dateTo, setDateTo] = useState(today)
   const [viewMode, setViewMode] = useState('revenue')
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -73,12 +75,13 @@ export default function Grafik() {
       .finally(() => setLoading(false))
   }, [dateFrom, dateTo])
 
-  function setPreset(days) {
-    const to = new Date()
-    const from = new Date(to)
-    from.setDate(from.getDate() - (days - 1))
-    setDateFrom(from.toISOString().split('T')[0])
-    setDateTo(to.toISOString().split('T')[0])
+  function setRange(days) {
+    const t = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Jakarta' }))
+    const f = new Date(t)
+    f.setDate(f.getDate() - days + 1)
+
+    setDateFrom(f.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' }))
+    setDateTo(t.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' }))
   }
 
   const dailyData = data?.daily || []
@@ -105,24 +108,24 @@ export default function Grafik() {
             type="date"
             className="form-input"
             value={dateTo}
-            max={today.toISOString().split('T')[0]}
+            max={today}
             onChange={(e) => setDateTo(e.target.value)}
             style={{ width: 'auto' }}
           />
         </div>
         <div className="grafik-presets">
-          <button className="btn btn-ghost btn-sm" onClick={() => setPreset(7)}>
+          <button className="btn btn-ghost btn-sm" onClick={() => setRange(7)}>
             7 Hari
           </button>
           <button
             className="btn btn-ghost btn-sm"
-            onClick={() => setPreset(30)}
+            onClick={() => setRange(30)}
           >
             30 Hari
           </button>
           <button
             className="btn btn-ghost btn-sm"
-            onClick={() => setPreset(90)}
+            onClick={() => setRange(90)}
           >
             3 Bulan
           </button>

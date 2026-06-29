@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { formatDate } from '../utils/format'
+import { useLocation } from 'react-router-dom'
+import { formatDate, getToday } from '../utils/format'
 import './Header.css'
 
 export default function Header({ title, onMenuToggle }) {
-  const today = new Date().toISOString().split('T')[0]
+  const location = useLocation()
+  const today = getToday()
 
   const [theme, setTheme] = useState(
     localStorage.getItem('alepasta-theme') || 'light'

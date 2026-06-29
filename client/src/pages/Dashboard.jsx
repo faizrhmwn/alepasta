@@ -16,6 +16,7 @@ import {
   formatDate,
   formatDateShort,
   getCategoryBadgeClass,
+  getToday,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './Dashboard.css'
@@ -43,8 +44,7 @@ export default function Dashboard() {
       .catch((err) => showToast(err.message, 'error'))
       .finally(() => setLoading(false))
   }, [])
-
-  const today = new Date().toISOString().split('T')[0]
+  const today = getToday()
 
   if (loading) {
     return (
