@@ -23,7 +23,7 @@ export default function InputPenjualan() {
   const [orderType, setOrderType] = useState('Takeaway')
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
-  const [spicyLevel, setSpicyLevel] = useState('Normal')
+  const [spicyLevel, setSpicyLevel] = useState('Tidak Pedas')
 
   // Cart
   const [cart, setCart] = useState([])
@@ -88,7 +88,7 @@ export default function InputPenjualan() {
     // Prepare modifiers for notes
     let modifiers = []
     
-    if (selectedProductData.category.toLowerCase() === 'pasta' && spicyLevel !== 'Normal') {
+    if (selectedProductData.category.toLowerCase() === 'pasta' && spicyLevel !== 'Tidak Pedas') {
       modifiers.push(`Pedas: ${spicyLevel}`)
     }
 
@@ -128,7 +128,7 @@ export default function InputPenjualan() {
     setQuantity(1)
     setNotes('')
     setSelectedToppings([])
-    setSpicyLevel('Normal')
+    setSpicyLevel('Tidak Pedas')
     showToast(`${selectedProductData.name} ditambahkan ke keranjang`, 'success')
   }
 
@@ -226,7 +226,7 @@ export default function InputPenjualan() {
                 onChange={(e) => {
                   setSelectedProduct(e.target.value)
                   setSelectedToppings([]) // Reset toppings when changing product
-                  setSpicyLevel('Normal') // Reset spicy level
+                  setSpicyLevel('Tidak Pedas') // Reset spicy level
                 }}
               >
                 <option value="">-- Pilih Produk --</option>
@@ -242,8 +242,8 @@ export default function InputPenjualan() {
               </select>
             </div>
 
-            {/* Toppings Section */}
-            {selectedProductData && toppingProducts.length > 0 && (
+            {/* Toppings Section - Only for Pasta */}
+            {selectedProductData && selectedProductData.category.toLowerCase() === 'pasta' && toppingProducts.length > 0 && (
               <div className="form-group toppings-group">
                 <label className="form-label">Topping (Opsional)</label>
                 <div className="toppings-list">
@@ -271,10 +271,9 @@ export default function InputPenjualan() {
                   value={spicyLevel}
                   onChange={(e) => setSpicyLevel(e.target.value)}
                 >
-                  <option value="Normal">Normal (Tidak Pedas)</option>
+                  <option value="Tidak Pedas">Tidak Pedas</option>
                   <option value="Sedang">Sedang</option>
                   <option value="Pedas">Pedas</option>
-                  <option value="Sangat Pedas">Sangat Pedas</option>
                 </select>
               </div>
             )}
