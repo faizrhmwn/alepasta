@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import StatCard from '../components/StatCard'
 import { getDailyRecap } from '../utils/api'
 import {
@@ -10,9 +11,10 @@ import { showToast } from '../utils/toast'
 import './RekapHarian.css'
 
 export default function RekapHarian() {
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split('T')[0]
-  )
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialDate = searchParams.get('date') || new Date().toISOString().split('T')[0]
+
+  const [selectedDate, setSelectedDate] = useState(initialDate)
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -27,7 +29,16 @@ export default function RekapHarian() {
   function changeDate(offset) {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + offset)
-    setSelectedDate(d.toISOString().split('T')[0])
+    const newDate = d.toISOString().split('T')[0]
+    setSelectedDate(newDate)
+    setSearchParams({ date: newDate }, { replace: true })
+  }
+
+  // Update URL if user changes date via input
+  function handleDateChange(e) {
+    const newDate = e.target.value
+    setSelectedDate(newDate)
+    setSearchParams({ date: newDate }, { replace: true })
   }
 
   const today = new Date().toISOString().split('T')[0]
@@ -51,7 +62,7 @@ export default function RekapHarian() {
           className="form-input"
           value={selectedDate}
           max={today}
-          onChange={(e) => setSelectedDate(e.target.value)}
+          onChange={handleDateChange}
           style={{ width: 'auto' }}
         />
         <button

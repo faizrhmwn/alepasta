@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import StatCard from '../components/StatCard'
 import { getMonthlyRecap } from '../utils/api'
 import {
@@ -11,6 +12,7 @@ import { showToast } from '../utils/toast'
 import './RekapBulanan.css'
 
 export default function RekapBulanan() {
+  const navigate = useNavigate()
   const now = new Date()
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   const [selectedMonth, setSelectedMonth] = useState(currentMonth)
@@ -125,22 +127,23 @@ export default function RekapBulanan() {
                       </tr>
                     </thead>
                     <tbody>
-                      {dailyBreakdown.map((day, idx) => (
-                        <tr
-                          key={idx}
-                          className={
-                            maxRevenueDate && day.date === maxRevenueDate.date
-                              ? 'highlight-row'
-                              : ''
-                          }
-                        >
+                      {dailyBreakdown.map((day, idx) => {
+                        const isMax = maxRevenueDate && day.date === maxRevenueDate.date;
+                        return (
+                          <tr
+                            key={idx}
+                            className={`clickable-row ${isMax ? 'highlight-row' : ''}`}
+                            onClick={() => navigate(`/rekap-harian?date=${day.date}`)}
+                            title="Klik untuk melihat detail hari ini"
+                          >
                           <td>{formatDate(day.date)}</td>
                           <td style={{ textAlign: 'right' }}>
                             {formatRupiah(day.revenue)}
                           </td>
                           <td style={{ textAlign: 'center' }}>{day.items}</td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
