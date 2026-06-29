@@ -50,8 +50,8 @@ export function updateProduct(id, data) {
 }
 
 export function toggleProductActive(id, isActive) {
-  return fetchAPI(`/products/${id}/toggle`, {
-    method: 'PATCH',
+  return fetchAPI(`/products/${id}`, {
+    method: 'PUT',
     body: JSON.stringify({ isActive }),
   })
 }
