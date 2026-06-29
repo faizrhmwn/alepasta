@@ -20,7 +20,7 @@ export default function KelolaMenu() {
 
   function fetchProducts() {
     setLoading(true)
-    getProducts(true) // includeAll = true
+    getProducts() // includeAll = false (hanya produk aktif)
       .then(setProducts)
       .catch((err) => showToast(err.message, 'error'))
       .finally(() => setLoading(false))
@@ -68,11 +68,11 @@ export default function KelolaMenu() {
   }
 
   async function handleToggleActive(id, currentStatus) {
-    if (!window.confirm(`Yakin ingin ${currentStatus ? 'menonaktifkan' : 'mengaktifkan'} produk ini?`)) return
+    if (!window.confirm(`Yakin ingin menghapus produk ini dari menu? (Data penjualan lama akan tetap aman)`)) return
     
     try {
       await toggleProductActive(id, !currentStatus)
-      showToast(`Produk berhasil di${!currentStatus ? 'aktifkan' : 'nonaktifkan'}`, 'success')
+      showToast(`Produk berhasil dihapus`, 'success')
       fetchProducts()
     } catch (err) {
       showToast(err.message, 'error')
@@ -125,11 +125,11 @@ export default function KelolaMenu() {
                             ✏️
                           </button>
                           <button 
-                            className={`btn-action ${p.isActive ? 'delete' : 'restore'}`} 
+                            className="btn-action delete" 
                             onClick={() => handleToggleActive(p.id, p.isActive)}
-                            title={p.isActive ? 'Nonaktifkan' : 'Aktifkan'}
+                            title="Hapus"
                           >
-                            {p.isActive ? '🚫' : '✅'}
+                            🗑️
                           </button>
                         </div>
                       </td>
