@@ -59,3 +59,33 @@ export function getCategoryBadgeClass(category) {
   }
   return classes[category] || 'badge-pasta'
 }
+
+export function groupSalesByTransaction(sales) {
+  const grouped = []
+  if (!sales || sales.length === 0) return grouped
+
+  let currentGroup = []
+  sales.forEach((sale) => {
+    if (currentGroup.length === 0) {
+      currentGroup.push(sale)
+    } else {
+      const lastSale = currentGroup[0]
+      const timeDiff = Math.abs(new Date(lastSale.createdAt) - new Date(sale.createdAt))
+      if (
+        timeDiff < 10000 &&
+        lastSale.orderType === sale.orderType &&
+        lastSale.paymentMethod === sale.paymentMethod &&
+        lastSale.saleDate === sale.saleDate
+      ) {
+        currentGroup.push(sale)
+      } else {
+        grouped.push(currentGroup)
+        currentGroup = [sale]
+      }
+    }
+  })
+  if (currentGroup.length > 0) {
+    grouped.push(currentGroup)
+  }
+  return grouped
+}

@@ -17,6 +17,7 @@ import {
   formatDateShort,
   getCategoryBadgeClass,
   getToday,
+  groupSalesByTransaction,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './Dashboard.css'
@@ -202,29 +203,39 @@ export default function Dashboard() {
         <h3 className="dashboard-section-title">🕐 Penjualan Terbaru</h3>
         {recentSales?.length > 0 ? (
           <ul className="recent-sales-list">
-            {recentSales.slice(0, 10).map((sale, idx) => (
-              <li key={idx} className="recent-sale-item">
-                <div className="recent-sale-info">
-                  <span
-                    className={`badge ${getCategoryBadgeClass(sale.category)}`}
-                  >
-                    {sale.category}
-                  </span>
-                  <span className="recent-sale-name">
-                    {sale.productName}
-                    <span className="order-type-badge" style={{ marginLeft: '0.5rem', fontSize: '0.65rem' }}>
-                      {sale.orderType || 'Dine-in'}
-                    </span>
-                  </span>
-                </div>
-                <div className="recent-sale-detail">
-                  <div className="recent-sale-qty">{sale.quantity}x</div>
-                  <div className="recent-sale-total">
-                    {formatRupiah(sale.totalPrice)}
+            {groupSalesByTransaction(recentSales).slice(0, 10).map((group, groupIdx) => {
+              const totalGroupPrice = group.reduce((sum, s) => sum + s.totalPrice, 0)
+              const firstSale = group[0]
+              return (
+                <li key={groupIdx} className="recent-sale-item" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', marginBottom: '4px' }}>
+                     <div style={{ fontSize: '0.8rem', color: '#9CA3AF' }}>
+                        <span className="order-type-badge">{firstSale.orderType || 'Dine-in'}</span>
+                        <span className="order-type-badge" style={{ marginLeft: '4px', background: firstSale.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
+                          {firstSale.paymentMethod || 'Cash'}
+                        </span>
+                     </div>
+                     <div style={{ fontWeight: 'bold', color: 'var(--red)' }}>
+                        {formatRupiah(totalGroupPrice)}
+                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                  {group.map((sale, idx) => (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
+                      <div className="recent-sale-info">
+                        <span className={`badge ${getCategoryBadgeClass(sale.category)}`}>
+                          {sale.category}
+                        </span>
+                        <span className="recent-sale-name">{sale.productName}</span>
+                      </div>
+                      <div className="recent-sale-detail" style={{ fontSize: '0.85rem' }}>
+                        <div className="recent-sale-qty" style={{ opacity: 0.8 }}>{sale.quantity}x</div>
+                        <div className="recent-sale-total">{formatRupiah(sale.totalPrice)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </li>
+              )
+            })}
           </ul>
         ) : (
           <div className="empty-state">

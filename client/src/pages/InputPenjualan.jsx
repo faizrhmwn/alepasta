@@ -5,6 +5,7 @@ import {
   formatDate,
   getCategoryBadgeClass,
   getToday,
+  groupSalesByTransaction,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './InputPenjualan.css'
@@ -437,40 +438,59 @@ export default function InputPenjualan() {
                       </tr>
                     </thead>
                     <tbody>
-                      {todaySales.records.map((sale) => (
-                        <tr key={sale.id}>
-                          <td>
-                            {sale.productName}
-                            <span className="order-type-badge">{sale.orderType || 'Dine-in'}</span>
-                            <span className="order-type-badge" style={{ marginLeft: '4px', background: sale.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
-                              {sale.paymentMethod || 'Cash'}
-                            </span>
-                            {sale.notes && (sale.notes.includes('Topping:') || sale.notes.includes('Pedas:')) && (
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                    {sale.notes}
-                                </div>
-                            )}
-                          </td>
-                          <td>
-                            <span
-                              className={`badge ${getCategoryBadgeClass(sale.category)}`}
-                            >
-                              {sale.category}
-                            </span>
-                          </td>
-                          <td>{sale.quantity}</td>
-                          <td>{formatRupiah(sale.totalPrice)}</td>
-                          <td>
-                            <button
-                              className="btn-delete"
-                              onClick={() => handleDeleteSale(sale.id)}
-                              title="Hapus"
-                            >
-                              🗑️
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {groupSalesByTransaction(todaySales.records).map((group, groupIdx) => {
+                        const firstSale = group[0]
+                        const totalGroupPrice = group.reduce((sum, s) => sum + s.totalPrice, 0)
+                        return (
+                          <div key={groupIdx} style={{ display: 'contents' }}>
+                            <tr style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                              <td colSpan="3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '8px 12px' }}>
+                                <span className="order-type-badge">{firstSale.orderType || 'Dine-in'}</span>
+                                <span className="order-type-badge" style={{ marginLeft: '4px', background: firstSale.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
+                                  {firstSale.paymentMethod || 'Cash'}
+                                </span>
+                                <span style={{ marginLeft: '8px', fontSize: '0.75rem', color: '#9CA3AF' }}>
+                                  {new Date(firstSale.createdAt).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}
+                                </span>
+                              </td>
+                              <td style={{ fontWeight: 'bold', color: 'var(--red)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '8px 12px' }}>
+                                {formatRupiah(totalGroupPrice)}
+                              </td>
+                              <td style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}></td>
+                            </tr>
+                            {group.map((sale) => (
+                              <tr key={sale.id}>
+                                <td style={{ paddingLeft: '24px' }}>
+                                  {sale.productName}
+                                  {sale.notes && (sale.notes.includes('Topping:') || sale.notes.includes('Pedas:')) && (
+                                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                          {sale.notes}
+                                      </div>
+                                  )}
+                                </td>
+                                <td>
+                                  <span
+                                    className={`badge ${getCategoryBadgeClass(sale.category)}`}
+                                  >
+                                    {sale.category}
+                                  </span>
+                                </td>
+                                <td>{sale.quantity}</td>
+                                <td>{formatRupiah(sale.totalPrice)}</td>
+                                <td>
+                                  <button
+                                    className="btn-delete"
+                                    onClick={() => handleDeleteSale(sale.id)}
+                                    title="Hapus"
+                                  >
+                                    🗑️
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </div>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
