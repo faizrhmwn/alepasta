@@ -42,9 +42,9 @@ function RecentSaleGroup({ group }) {
   const firstSale = group[0]
   
   const dateObj = new Date(firstSale.createdAt)
-  const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'short' })
+  const dateStr = dateObj.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })
   const time = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-  const timeString = `${dayName}, ${time}`
+  const timeString = `${dateStr}, ${time}`
   
   return (
     <li className="recent-sale-item" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0', padding: 0, overflow: 'hidden' }}>
