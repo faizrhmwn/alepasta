@@ -41,6 +41,11 @@ function RecentSaleGroup({ group }) {
   const totalGroupItems = group.reduce((sum, s) => sum + (s.quantity || 1), 0)
   const firstSale = group[0]
   
+  const dateObj = new Date(firstSale.createdAt)
+  const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'short' })
+  const time = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+  const timeString = `${dayName}, ${time}`
+  
   return (
     <li className="recent-sale-item" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0', padding: 0, overflow: 'hidden' }}>
       <div 
@@ -64,6 +69,8 @@ function RecentSaleGroup({ group }) {
               {firstSale.paymentMethod || 'Cash'}
             </span>
             <span>({totalGroupItems} item)</span>
+            <span style={{ opacity: 0.5 }}>•</span>
+            <span>{timeString}</span>
          </div>
          <div style={{ fontWeight: 'bold', color: 'var(--red)' }}>
             {formatRupiah(totalGroupPrice)}
