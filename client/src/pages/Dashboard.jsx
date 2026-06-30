@@ -38,6 +38,7 @@ function CustomTooltip({ active, payload, label }) {
 function RecentSaleGroup({ group }) {
   const [expanded, setExpanded] = useState(false)
   const totalGroupPrice = group.reduce((sum, s) => sum + s.totalPrice, 0)
+  const totalGroupItems = group.reduce((sum, s) => sum + (s.quantity || 1), 0)
   const firstSale = group[0]
   
   return (
@@ -62,7 +63,7 @@ function RecentSaleGroup({ group }) {
             <span className="order-type-badge" style={{ background: firstSale.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
               {firstSale.paymentMethod || 'Cash'}
             </span>
-            <span>({group.length} item)</span>
+            <span>({totalGroupItems} item)</span>
          </div>
          <div style={{ fontWeight: 'bold', color: 'var(--red)' }}>
             {formatRupiah(totalGroupPrice)}
