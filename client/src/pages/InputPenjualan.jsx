@@ -29,8 +29,9 @@ export default function InputPenjualan() {
   const [notes, setNotes] = useState('')
   const [spicyLevel, setSpicyLevel] = useState('Tidak Pedas')
 
-  // Cart
+  // Cart & Discount
   const [cart, setCart] = useState([])
+  const [transactionDiscount, setTransactionDiscount] = useState(0)
 
   // Separate main products and toppings
   const mainProducts = products.filter(p => p.category !== 'topping')
@@ -146,7 +147,9 @@ export default function InputPenjualan() {
 
     setSubmitting(true)
     try {
+      let discountApplied = false;
       for (const item of cart) {
+        const itemDiscount = !discountApplied ? transactionDiscount : 0;
         await postSale({
           productId: item.productId,
           quantity: item.quantity,
@@ -154,11 +157,14 @@ export default function InputPenjualan() {
           orderType: item.orderType,
           paymentMethod: item.paymentMethod,
           notes: item.notes || undefined,
-          toppingPrice: item.toppingPrice || 0
+          toppingPrice: item.toppingPrice || 0,
+          discount: itemDiscount
         })
+        discountApplied = true;
       }
       showToast(`${cart.length} penjualan berhasil disimpan! 🎉`, 'success')
       setCart([])
+      setTransactionDiscount(0)
       fetchTodaySales()
     } catch (err) {
       showToast(err.message, 'error')
@@ -398,9 +404,26 @@ export default function InputPenjualan() {
                     </li>
                   ))}
                 </ul>
-                <div className="cart-total">
-                  <span>Total Keranjang</span>
+                <div className="cart-total" style={{ paddingBottom: '0.5rem', borderBottom: '1px solid var(--glass-border)' }}>
+                  <span>Subtotal</span>
                   <span>{formatRupiah(cartTotal)}</span>
+                </div>
+                
+                <div className="form-group" style={{ margin: '1rem 0' }}>
+                  <label className="form-label" style={{ fontSize: '0.85rem' }}>Diskon Transaksi (Rp)</label>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={transactionDiscount || ''}
+                    onChange={(e) => setTransactionDiscount(Math.max(0, Number(e.target.value)))}
+                    min="0"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div className="cart-total" style={{ color: 'var(--accent-primary)', fontSize: '1.2rem', fontWeight: 'bold' }}>
+                  <span>Total Akhir</span>
+                  <span>{formatRupiah(Math.max(0, cartTotal - transactionDiscount))}</span>
                 </div>
                 <button
                   className="btn btn-primary btn-submit-all"
@@ -442,6 +465,7 @@ export default function InputPenjualan() {
                       {groupSalesByTransaction(todaySales.records).map((group, groupIdx) => {
                         const firstSale = group[0]
                         const totalGroupPrice = group.reduce((sum, s) => sum + s.totalPrice, 0)
+                        const totalGroupDiscount = group.reduce((sum, s) => sum + (s.discount || 0), 0)
                         return (
                           <div key={groupIdx} style={{ display: 'contents' }}>
                             <tr style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
@@ -453,6 +477,11 @@ export default function InputPenjualan() {
                                 <span style={{ marginLeft: '8px', fontSize: '0.75rem', color: '#9CA3AF' }}>
                                   {new Date(firstSale.createdAt).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}
                                 </span>
+                                {totalGroupDiscount > 0 && (
+                                  <span style={{ marginLeft: '8px', fontSize: '0.75rem', color: 'var(--red)', fontWeight: 'bold' }}>
+                                    (Diskon: {formatRupiah(totalGroupDiscount)})
+                                  </span>
+                                )}
                               </td>
                               <td style={{ fontWeight: 'bold', color: 'var(--red)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '8px 12px' }}>
                                 {formatRupiah(totalGroupPrice)}

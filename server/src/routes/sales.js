@@ -49,7 +49,7 @@ function fillDateRange(rows, from, to) {
 // ── POST / ── Create sale ───────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {
-    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in', paymentMethod = 'Cash' } = req.body;
+    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in', paymentMethod = 'Cash', discount = 0 } = req.body;
 
     if (!productId) {
       return res.status(400).json({ success: false, error: 'productId is required' });
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
     }
 
     const unitPrice = product.price + Number(toppingPrice);
-    const totalPrice = unitPrice * Number(quantity);
+    const totalPrice = (unitPrice * Number(quantity)) - Number(discount);
 
     const [newSale] = await db
       .insert(sales)
@@ -80,6 +80,7 @@ router.post('/', async (req, res) => {
         orderType,
         paymentMethod,
         notes: notes || null,
+        discount: Number(discount)
       })
       .returning();
 
@@ -132,6 +133,7 @@ router.get('/daily', async (req, res) => {
         orderType: sales.orderType,
         paymentMethod: sales.paymentMethod,
         notes: sales.notes,
+        discount: sales.discount,
         createdAt: sales.createdAt,
       })
       .from(sales)
@@ -356,6 +358,7 @@ router.get('/dashboard', async (req, res) => {
         orderType: sales.orderType,
         paymentMethod: sales.paymentMethod,
         notes: sales.notes,
+        discount: sales.discount,
         createdAt: sales.createdAt,
       })
       .from(sales)

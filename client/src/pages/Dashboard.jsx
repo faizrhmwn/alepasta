@@ -142,6 +142,24 @@ export default function Dashboard() {
     recentSales,
   } = data || {}
 
+  const todayRevenue = todayData?.revenue || 0
+  let revenueTrend = null
+
+  if (weeklyTrend && weeklyTrend.length >= 2) {
+    const yesterdayData = weeklyTrend[weeklyTrend.length - 2]
+    const yesterdayRevenue = yesterdayData?.revenue || 0
+    
+    if (yesterdayRevenue > 0) {
+      const diff = todayRevenue - yesterdayRevenue
+      const percentage = Math.round(Math.abs(diff) / yesterdayRevenue * 100)
+      if (diff > 0) {
+        revenueTrend = { direction: 'up', value: `${percentage}% vs kemarin` }
+      } else if (diff < 0) {
+        revenueTrend = { direction: 'down', value: `${percentage}% vs kemarin` }
+      }
+    }
+  }
+
   return (
     <div className="animate-in">
       <div className="dashboard-welcome">
@@ -158,8 +176,9 @@ export default function Dashboard() {
         <StatCard
           icon="💰"
           title="Pendapatan Hari Ini"
-          value={formatRupiah(todayData?.revenue)}
+          value={formatRupiah(todayRevenue)}
           subtitle={`Cash: ${formatRupiah(todayData?.totalCash || 0)} | QRIS: ${formatRupiah(todayData?.totalQris || 0)}`}
+          trend={revenueTrend}
           delay={0}
         />
         <StatCard

@@ -40,6 +40,7 @@ export const sales = pgTable('sales', {
   orderType: varchar('order_type', { length: 50 }).default('Dine-in'),
   paymentMethod: varchar('payment_method', { length: 50 }).default('Cash'),
   notes: text('notes'),
+  discount: integer('discount').default(0),
   createdAt: timestamp('created_at').defaultNow(),
 });
 
