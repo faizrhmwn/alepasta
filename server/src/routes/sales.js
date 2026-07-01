@@ -299,7 +299,7 @@ router.get('/dashboard', async (req, res) => {
       .select({
         revenue: sum(sales.totalPrice).mapWith(Number),
         items: sum(sales.quantity).mapWith(Number),
-        transactions: sql`count(distinct ${sales.transactionId})`.mapWith(Number),
+        transactions: sql`count(distinct coalesce(${sales.transactionId}, cast(${sales.id} as varchar)))`.mapWith(Number),
       })
       .from(sales)
       .where(eq(sales.saleDate, today));
@@ -325,7 +325,7 @@ router.get('/dashboard', async (req, res) => {
       .select({
         revenue: sum(sales.totalPrice).mapWith(Number),
         items: sum(sales.quantity).mapWith(Number),
-        transactions: sql`count(distinct ${sales.transactionId})`.mapWith(Number),
+        transactions: sql`count(distinct coalesce(${sales.transactionId}, cast(${sales.id} as varchar)))`.mapWith(Number),
       })
       .from(sales)
       .where(between(sales.saleDate, monthStart, monthEnd));
@@ -375,6 +375,7 @@ router.get('/dashboard', async (req, res) => {
         paymentMethod: sales.paymentMethod,
         notes: sales.notes,
         discount: sales.discount,
+        transactionId: sales.transactionId,
         createdAt: sales.createdAt,
       })
       .from(sales)
