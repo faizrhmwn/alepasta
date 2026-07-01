@@ -8,6 +8,10 @@ export default function KelolaMenu() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
+  // Filter & Sort State
+  const [filterCategory, setFilterCategory] = useState('all')
+  const [sortBy, setSortBy] = useState('name_asc')
+
   // Form State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
@@ -79,6 +83,23 @@ export default function KelolaMenu() {
     }
   }
 
+  const displayedProducts = [...products]
+    .filter(p => {
+       if (filterCategory === 'all') return true
+       const c = p.category.toString().toLowerCase().replace(/[^a-z0-9]/g, '')
+       return c === filterCategory
+    })
+    .sort((a, b) => {
+       switch(sortBy) {
+         case 'name_asc': return a.name.localeCompare(b.name)
+         case 'name_desc': return b.name.localeCompare(a.name)
+         case 'price_asc': return a.price - b.price
+         case 'price_desc': return b.price - a.price
+         case 'category_asc': return a.category.localeCompare(b.category)
+         default: return 0
+       }
+    })
+
   return (
     <div className="animate-in kelola-menu-page">
       <div className="kelola-header">
@@ -86,6 +107,32 @@ export default function KelolaMenu() {
         <button className="btn btn-primary btn-add-menu" onClick={() => handleOpenModal()}>
           + Tambah Produk
         </button>
+      </div>
+      
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', background: 'var(--bg-card)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)' }}>
+         <div className="form-group" style={{ marginBottom: 0, flex: 1 }}>
+            <label className="form-label" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>Filter Kategori</label>
+            <select className="form-input form-select" value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
+               <option value="all">Semua Kategori</option>
+               <option value="alacarte">Ala Carte</option>
+               <option value="beverage">Beverage</option>
+               <option value="pasta">Pasta</option>
+               <option value="rice">Rice</option>
+               <option value="salad">Salad</option>
+               <option value="side">Side</option>
+               <option value="topping">Topping</option>
+            </select>
+         </div>
+         <div className="form-group" style={{ marginBottom: 0, flex: 1 }}>
+            <label className="form-label" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>Urutkan Berdasarkan</label>
+            <select className="form-input form-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+               <option value="name_asc">Nama (A - Z)</option>
+               <option value="name_desc">Nama (Z - A)</option>
+               <option value="price_asc">Harga (Terendah ke Tertinggi)</option>
+               <option value="price_desc">Harga (Tertinggi ke Terendah)</option>
+               <option value="category_asc">Kategori</option>
+            </select>
+         </div>
       </div>
 
       <div className="glass-card">
@@ -104,8 +151,8 @@ export default function KelolaMenu() {
                 </tr>
               </thead>
               <tbody>
-                {products.length > 0 ? (
-                  products.map((p) => (
+                {displayedProducts.length > 0 ? (
+                  displayedProducts.map((p) => (
                     <tr key={p.id} className={!p.isActive ? 'inactive-row' : ''}>
                       <td>{p.name}</td>
                       <td>

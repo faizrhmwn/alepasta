@@ -32,15 +32,18 @@ export function formatMonth(monthStr) {
 }
 
 export function getCategoryColor(category) {
+  if (!category) return '#E67E22'
+  const c = category.toString().toLowerCase().replace(/[^a-z0-9]/g, '')
   const colors = {
-    Pasta: '#E67E22',
-    Rice: '#F1C40F',
-    Salad: '#27AE60',
-    Side: '#E74C3C',
-    Beverage: '#3498DB',
-    'A La Carte': '#9B59B6',
+    pasta: '#E67E22',
+    rice: '#F1C40F',
+    salad: '#27AE60',
+    side: '#E74C3C',
+    beverage: '#3498DB',
+    alacarte: '#9B59B6',
+    topping: '#95A5A6'
   }
-  return colors[category] || '#E67E22'
+  return colors[c] || '#E67E22'
 }
 
 export function getCategoryBg(category) {
@@ -49,15 +52,16 @@ export function getCategoryBg(category) {
 }
 
 export function getCategoryBadgeClass(category) {
-  const classes = {
-    Pasta: 'badge-pasta',
-    Rice: 'badge-rice',
-    Salad: 'badge-salad',
-    Side: 'badge-side',
-    Beverage: 'badge-beverage',
-    'A La Carte': 'badge-alacarte',
-  }
-  return classes[category] || 'badge-pasta'
+  if (!category) return 'badge-pasta'
+  const c = category.toString().toLowerCase().replace(/[^a-z0-9]/g, '')
+  if (c === 'pasta') return 'badge-pasta'
+  if (c === 'rice') return 'badge-rice'
+  if (c === 'salad') return 'badge-salad'
+  if (c === 'side') return 'badge-side'
+  if (c === 'beverage') return 'badge-beverage'
+  if (c === 'alacarte') return 'badge-alacarte'
+  if (c === 'topping') return 'badge-topping'
+  return 'badge-pasta'
 }
 
 export function groupSalesByTransaction(sales) {
