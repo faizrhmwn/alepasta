@@ -204,6 +204,13 @@ export default function Dashboard() {
           color="#3498DB"
         />
         <StatCard
+          icon="🧾"
+          title="Transaksi Hari Ini"
+          value={`${todayData?.transactions || 0} transaksi`}
+          delay={150}
+          color="#E67E22"
+        />
+        <StatCard
           icon="💰"
           title="Pendapatan Bulan Ini"
           value={formatRupiah(thisMonth?.revenue)}
@@ -213,6 +220,13 @@ export default function Dashboard() {
         />
         <StatCard
           icon="📦"
+          title="Item Terjual Bulan Ini"
+          value={`${thisMonth?.items || 0} item`}
+          delay={250}
+          color="#3498DB"
+        />
+        <StatCard
+          icon="🧾"
           title="Transaksi Bulan Ini"
           value={`${thisMonth?.transactions || 0} transaksi`}
           delay={300}
