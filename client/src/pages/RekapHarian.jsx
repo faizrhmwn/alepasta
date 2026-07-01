@@ -8,6 +8,7 @@ import {
   getCategoryBadgeClass,
   getToday,
   formatCategoryName,
+  groupSalesByTransaction,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './RekapHarian.css'
@@ -238,43 +239,52 @@ export default function RekapHarian() {
           {records.length > 0 && (
             <div className="glass-card records-section">
               <h3 className="records-title">📝 Detail Transaksi</h3>
-              {records.map((rec, idx) => (
-                <div key={idx} className="record-item">
-                  <div className="record-info">
-                    <span
-                      className={`badge ${getCategoryBadgeClass(rec.category)}`}
-                    >
-                      {formatCategoryName(rec.category)}
-                    </span>
-                    <div>
-                      <div className="record-name">
-                        {rec.productName}
-                        <span className="order-type-badge">{rec.orderType || 'Dine-in'}</span>
-                        <span className="order-type-badge" style={{ marginLeft: '4px', background: rec.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
-                          {rec.paymentMethod || 'Cash'}
-                        </span>
-                      </div>
-                      {rec.notes && (
-                        <div className="record-notes">{rec.notes}</div>
-                      )}
+              {groupSalesByTransaction(records).map((group, groupIdx) => {
+                const firstSale = group[0]
+                const dateObj = new Date(firstSale.createdAt)
+                const time = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                const totalGroupPrice = group.reduce((sum, s) => sum + s.totalPrice, 0)
+                
+                return (
+                  <div key={groupIdx} style={{ marginBottom: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                    <div style={{ padding: '10px 16px', background: 'rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                       <div style={{ fontSize: '0.85rem', color: '#9CA3AF', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                         <strong>🕒 {time}</strong>
+                         <span className="order-type-badge">{firstSale.orderType || 'Dine-in'}</span>
+                         <span className="order-type-badge" style={{ background: firstSale.paymentMethod === 'QRIS' ? '#8E44AD' : '#27AE60' }}>
+                           {firstSale.paymentMethod || 'Cash'}
+                         </span>
+                       </div>
+                       <div style={{ fontWeight: 'bold', color: 'var(--red)', fontSize: '0.9rem' }}>
+                         {formatRupiah(totalGroupPrice)}
+                       </div>
+                    </div>
+                    <div style={{ padding: '8px 0' }}>
+                      {group.map((rec) => (
+                        <div key={rec.id} className="record-item" style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', padding: '12px 16px', margin: 0, borderRadius: 0 }}>
+                           <div className="record-info">
+                             <span className={`badge ${getCategoryBadgeClass(rec.category)}`}>
+                               {formatCategoryName(rec.category)}
+                             </span>
+                             <div>
+                               <div className="record-name">{rec.productName}</div>
+                               {rec.notes && <div className="record-notes">{rec.notes}</div>}
+                             </div>
+                           </div>
+                           <div className="record-detail">
+                             <div className="record-qty">{rec.quantity}x</div>
+                             <div className="record-total">{formatRupiah(rec.totalPrice)}</div>
+                           </div>
+                           <div className="record-actions" style={{ marginLeft: '1rem', display: 'flex', gap: '0.5rem' }}>
+                             <button className="btn-action edit" onClick={() => handleEditClick(rec)} title="Edit">✏️</button>
+                             <button className="btn-action delete" onClick={() => handleDelete(rec.id)} title="Hapus">🗑️</button>
+                           </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className="record-detail">
-                    <div className="record-qty">{rec.quantity}x</div>
-                    <div className="record-total">
-                      {formatRupiah(rec.totalPrice)}
-                    </div>
-                  </div>
-                  <div className="record-actions" style={{ marginLeft: '1rem', display: 'flex', gap: '0.5rem' }}>
-                    <button className="btn-action edit" onClick={() => handleEditClick(rec)} title="Edit">
-                      ✏️
-                    </button>
-                    <button className="btn-action delete" onClick={() => handleDelete(rec.id)} title="Hapus">
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </>
