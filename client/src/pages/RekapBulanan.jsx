@@ -100,6 +100,13 @@ export default function RekapBulanan() {
               color="#3498DB"
             />
             <StatCard
+              icon="🧾"
+              title="Total Transaksi"
+              value={`${summary.totalTransactions || 0} transaksi`}
+              delay={150}
+              color="#9B59B6"
+            />
+            <StatCard
               icon="📊"
               title="Rata-rata / Hari"
               value={formatRupiah(summary.avgPerDay)}

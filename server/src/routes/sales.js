@@ -231,13 +231,22 @@ router.get('/monthly', async (req, res) => {
     const daysWithSales = dailyBreakdown.length;
     const avgPerDay = daysWithSales > 0 ? Math.round(totalRevenue / daysWithSales) : 0;
 
+    const monthTransactions = await db
+      .select({
+        total: sql`count(distinct coalesce(${sales.transactionId}, cast(${sales.id} as varchar)))`.mapWith(Number),
+      })
+      .from(sales)
+      .where(between(sales.saleDate, startDate, endDate));
+
+    const totalTransactions = monthTransactions[0]?.total || 0;
+
     return res.json({
       success: true,
       data: {
         month,
         dailyBreakdown,
         productBreakdown,
-        summary: { totalRevenue, totalItems, avgPerDay, daysWithSales, totalCash, totalQris },
+        summary: { totalRevenue, totalItems, avgPerDay, daysWithSales, totalCash, totalQris, totalTransactions },
       },
     });
   } catch (err) {
