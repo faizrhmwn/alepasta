@@ -129,10 +129,12 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 10vh;
   justify-content: center;
   z-index: 1000;
   backdrop-filter: blur(4px);
+  overflow-y: auto;
 }
 
 .modal-content {
