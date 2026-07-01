@@ -146,7 +146,16 @@ router.get('/daily', async (req, res) => {
     // Summary
     const totalRevenue = items.reduce((s, i) => s + i.totalPrice, 0);
     const totalItems = items.reduce((s, i) => s + i.quantity, 0);
-    const totalTransactions = records.length;
+    
+    const uniqueTransactions = new Set();
+    records.forEach(r => {
+      if (r.transactionId) {
+        uniqueTransactions.add(r.transactionId);
+      } else {
+        uniqueTransactions.add(r.id.toString());
+      }
+    });
+    const totalTransactions = uniqueTransactions.size;
     const totalCash = records.filter(r => r.paymentMethod === 'Cash').reduce((s, r) => s + r.totalPrice, 0);
     const totalQris = records.filter(r => r.paymentMethod === 'QRIS').reduce((s, r) => s + r.totalPrice, 0);
 
