@@ -64,6 +64,21 @@ export function getCategoryBadgeClass(category) {
   return 'badge-pasta'
 }
 
+export function formatCategoryName(category) {
+  if (!category) return 'Unknown'
+  const c = category.toString().toLowerCase().replace(/[^a-z0-9]/g, '')
+  const names = {
+    pasta: 'Pasta',
+    rice: 'Rice',
+    salad: 'Salad',
+    side: 'Side',
+    beverage: 'Beverage',
+    alacarte: 'A La Carte',
+    topping: 'Topping'
+  }
+  return names[c] || category.toString()
+}
+
 export function groupSalesByTransaction(sales) {
   const grouped = []
   if (!sales || sales.length === 0) return grouped

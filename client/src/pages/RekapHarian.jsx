@@ -7,6 +7,7 @@ import {
   formatDate,
   getCategoryBadgeClass,
   getToday,
+  formatCategoryName,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './RekapHarian.css'
@@ -197,7 +198,7 @@ export default function RekapHarian() {
                           <span
                             className={`badge ${getCategoryBadgeClass(item.category)}`}
                           >
-                            {item.category}
+                            {formatCategoryName(item.category)}
                           </span>
                         </td>
                         <td style={{ textAlign: 'center' }}>{item.quantity}</td>
@@ -243,7 +244,7 @@ export default function RekapHarian() {
                     <span
                       className={`badge ${getCategoryBadgeClass(rec.category)}`}
                     >
-                      {rec.category}
+                      {formatCategoryName(rec.category)}
                     </span>
                     <div>
                       <div className="record-name">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getProducts, createProduct, updateProduct, toggleProductActive } from '../utils/api'
-import { formatRupiah, getCategoryBadgeClass } from '../utils/format'
+import { formatRupiah, getCategoryBadgeClass, formatCategoryName } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './KelolaMenu.css'
 
@@ -157,7 +157,7 @@ export default function KelolaMenu() {
                       <td>{p.name}</td>
                       <td>
                         <span className={`badge ${getCategoryBadgeClass(p.category)}`}>
-                          {p.category}
+                          {formatCategoryName(p.category)}
                         </span>
                       </td>
                       <td style={{ textAlign: 'right' }}>{formatRupiah(p.price)}</td>

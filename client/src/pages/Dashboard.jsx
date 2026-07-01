@@ -18,6 +18,7 @@ import {
   getCategoryBadgeClass,
   getToday,
   groupSalesByTransaction,
+  formatCategoryName,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './Dashboard.css'
@@ -83,7 +84,7 @@ function RecentSaleGroup({ group }) {
             <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
               <div className="recent-sale-info">
                 <span className={`badge ${getCategoryBadgeClass(sale.category)}`}>
-                  {sale.category}
+                  {formatCategoryName(sale.category)}
                 </span>
                 <span className="recent-sale-name">{sale.productName}</span>
               </div>
@@ -197,7 +198,7 @@ export default function Dashboard() {
                     <span
                       className={`badge ${getCategoryBadgeClass(item.category)}`}
                     >
-                      {item.category}
+                      {formatCategoryName(item.category)}
                     </span>
                   </div>
                   <div className="top-menu-stats">

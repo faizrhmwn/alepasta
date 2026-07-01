@@ -7,6 +7,7 @@ import {
   formatDate,
   formatMonth,
   getCategoryBadgeClass,
+  formatCategoryName,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './RekapBulanan.css'
@@ -177,7 +178,7 @@ export default function RekapBulanan() {
                             <span
                               className={`badge ${getCategoryBadgeClass(item.category)}`}
                             >
-                              {item.category}
+                              {formatCategoryName(item.category)}
                             </span>
                           </td>
                           <td style={{ textAlign: 'center' }}>

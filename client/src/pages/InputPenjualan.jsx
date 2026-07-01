@@ -6,6 +6,7 @@ import {
   getCategoryBadgeClass,
   getToday,
   groupSalesByTransaction,
+  formatCategoryName,
 } from '../utils/format'
 import { showToast } from '../utils/toast'
 import './InputPenjualan.css'
@@ -472,7 +473,7 @@ export default function InputPenjualan() {
                                   <span
                                     className={`badge ${getCategoryBadgeClass(sale.category)}`}
                                   >
-                                    {sale.category}
+                                    {formatCategoryName(sale.category)}
                                   </span>
                                 </td>
                                 <td>{sale.quantity}</td>
