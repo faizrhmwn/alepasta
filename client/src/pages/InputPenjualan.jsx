@@ -147,6 +147,7 @@ export default function InputPenjualan() {
 
     setSubmitting(true)
     try {
+      const transactionId = `TRX-${Date.now()}`;
       const totalDiscountNominal = Math.floor(cartTotal * (transactionDiscount / 100));
       let discountApplied = false;
       for (const item of cart) {
@@ -159,7 +160,8 @@ export default function InputPenjualan() {
           paymentMethod: item.paymentMethod,
           notes: item.notes || undefined,
           toppingPrice: item.toppingPrice || 0,
-          discount: itemDiscount
+          discount: itemDiscount,
+          transactionId
         })
         discountApplied = true;
       }

@@ -33,6 +33,7 @@ export const products = pgTable('products', {
 export const sales = pgTable('sales', {
   id: serial('id').primaryKey(),
   productId: integer('product_id').references(() => products.id),
+  transactionId: varchar('transaction_id', { length: 100 }),
   quantity: integer('quantity').notNull().default(1),
   unitPrice: integer('unit_price').notNull(),
   totalPrice: integer('total_price').notNull(),

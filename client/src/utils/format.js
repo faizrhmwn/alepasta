@@ -89,17 +89,29 @@ export function groupSalesByTransaction(sales) {
       currentGroup.push(sale)
     } else {
       const lastSale = currentGroup[0]
-      const timeDiff = Math.abs(new Date(lastSale.createdAt) - new Date(sale.createdAt))
-      if (
-        timeDiff < 10000 &&
-        lastSale.orderType === sale.orderType &&
-        lastSale.paymentMethod === sale.paymentMethod &&
-        lastSale.saleDate === sale.saleDate
-      ) {
-        currentGroup.push(sale)
+      
+      // If both have transactionId, group strictly by transactionId
+      if (lastSale.transactionId && sale.transactionId) {
+        if (lastSale.transactionId === sale.transactionId) {
+          currentGroup.push(sale)
+        } else {
+          grouped.push(currentGroup)
+          currentGroup = [sale]
+        }
       } else {
-        grouped.push(currentGroup)
-        currentGroup = [sale]
+        // Fallback for older records without transactionId
+        const timeDiff = Math.abs(new Date(lastSale.createdAt) - new Date(sale.createdAt))
+        if (
+          timeDiff < 10000 &&
+          lastSale.orderType === sale.orderType &&
+          lastSale.paymentMethod === sale.paymentMethod &&
+          lastSale.saleDate === sale.saleDate
+        ) {
+          currentGroup.push(sale)
+        } else {
+          grouped.push(currentGroup)
+          currentGroup = [sale]
+        }
       }
     }
   })

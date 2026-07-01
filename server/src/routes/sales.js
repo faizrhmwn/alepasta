@@ -49,7 +49,7 @@ function fillDateRange(rows, from, to) {
 // ── POST / ── Create sale ───────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {
-    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in', paymentMethod = 'Cash', discount = 0 } = req.body;
+    const { productId, quantity = 1, saleDate, notes, toppingPrice = 0, orderType = 'Dine-in', paymentMethod = 'Cash', discount = 0, transactionId } = req.body;
 
     if (!productId) {
       return res.status(400).json({ success: false, error: 'productId is required' });
@@ -80,7 +80,8 @@ router.post('/', async (req, res) => {
         orderType,
         paymentMethod,
         notes: notes || null,
-        discount: Number(discount)
+        discount: Number(discount),
+        transactionId
       })
       .returning();
 
@@ -134,6 +135,7 @@ router.get('/daily', async (req, res) => {
         paymentMethod: sales.paymentMethod,
         notes: sales.notes,
         discount: sales.discount,
+        transactionId: sales.transactionId,
         createdAt: sales.createdAt,
       })
       .from(sales)
@@ -297,7 +299,7 @@ router.get('/dashboard', async (req, res) => {
       .select({
         revenue: sum(sales.totalPrice).mapWith(Number),
         items: sum(sales.quantity).mapWith(Number),
-        transactions: count(sales.id).mapWith(Number),
+        transactions: sql`count(distinct ${sales.transactionId})`.mapWith(Number),
       })
       .from(sales)
       .where(eq(sales.saleDate, today));
@@ -323,7 +325,7 @@ router.get('/dashboard', async (req, res) => {
       .select({
         revenue: sum(sales.totalPrice).mapWith(Number),
         items: sum(sales.quantity).mapWith(Number),
-        transactions: count(sales.id).mapWith(Number),
+        transactions: sql`count(distinct ${sales.transactionId})`.mapWith(Number),
       })
       .from(sales)
       .where(between(sales.saleDate, monthStart, monthEnd));
