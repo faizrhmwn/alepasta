@@ -10,7 +10,7 @@ export default function KelolaMenu() {
 
   // Filter & Sort State
   const [filterCategory, setFilterCategory] = useState('all')
-  const [sortBy, setSortBy] = useState('name_asc')
+  const [sortConfig, setSortConfig] = useState({ key: 'category', direction: 'asc' })
 
   // Form State
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -90,15 +90,31 @@ export default function KelolaMenu() {
        return c === filterCategory
     })
     .sort((a, b) => {
-       switch(sortBy) {
-         case 'name_asc': return a.name.localeCompare(b.name)
-         case 'name_desc': return b.name.localeCompare(a.name)
-         case 'price_asc': return a.price - b.price
-         case 'price_desc': return b.price - a.price
-         case 'category_asc': return a.category.localeCompare(b.category)
-         default: return 0
-       }
+       let aVal = a[sortConfig.key]
+       let bVal = b[sortConfig.key]
+       
+       if (typeof aVal === 'string') aVal = aVal.toLowerCase()
+       if (typeof bVal === 'string') bVal = bVal.toLowerCase()
+       
+       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1
+       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1
+       return 0
     })
+
+  const requestSort = (key) => {
+    let direction = 'asc'
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc'
+    }
+    setSortConfig({ key, direction })
+  }
+
+  const getSortIndicator = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
+    }
+    return ''
+  }
 
   return (
     <div className="animate-in kelola-menu-page">
@@ -110,7 +126,7 @@ export default function KelolaMenu() {
       </div>
       
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', background: 'var(--bg-card)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)' }}>
-         <div className="form-group" style={{ marginBottom: 0, flex: 1 }}>
+         <div className="form-group" style={{ marginBottom: 0, flex: 1, maxWidth: '300px' }}>
             <label className="form-label" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>Filter Kategori</label>
             <select className="form-input form-select" value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
                <option value="all">Semua Kategori</option>
@@ -123,16 +139,6 @@ export default function KelolaMenu() {
                <option value="topping">Topping</option>
             </select>
          </div>
-         <div className="form-group" style={{ marginBottom: 0, flex: 1 }}>
-            <label className="form-label" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>Urutkan Berdasarkan</label>
-            <select className="form-input form-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
-               <option value="name_asc">Nama (A - Z)</option>
-               <option value="name_desc">Nama (Z - A)</option>
-               <option value="price_asc">Harga (Terendah ke Tertinggi)</option>
-               <option value="price_desc">Harga (Tertinggi ke Terendah)</option>
-               <option value="category_asc">Kategori</option>
-            </select>
-         </div>
       </div>
 
       <div className="glass-card">
@@ -143,10 +149,18 @@ export default function KelolaMenu() {
             <table className="glass-table">
               <thead>
                 <tr>
-                  <th>Produk</th>
-                  <th>Kategori</th>
-                  <th style={{ textAlign: 'right' }}>Harga</th>
-                  <th style={{ textAlign: 'center' }}>Status</th>
+                  <th onClick={() => requestSort('name')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                    Produk{getSortIndicator('name')}
+                  </th>
+                  <th onClick={() => requestSort('category')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                    Kategori{getSortIndicator('category')}
+                  </th>
+                  <th onClick={() => requestSort('price')} style={{ cursor: 'pointer', userSelect: 'none', textAlign: 'right' }}>
+                    Harga{getSortIndicator('price')}
+                  </th>
+                  <th onClick={() => requestSort('isActive')} style={{ cursor: 'pointer', userSelect: 'none', textAlign: 'center' }}>
+                    Status{getSortIndicator('isActive')}
+                  </th>
                   <th style={{ textAlign: 'right' }}>Aksi</th>
                 </tr>
               </thead>
