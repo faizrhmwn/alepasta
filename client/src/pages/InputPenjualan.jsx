@@ -147,9 +147,10 @@ export default function InputPenjualan() {
 
     setSubmitting(true)
     try {
+      const totalDiscountNominal = Math.floor(cartTotal * (transactionDiscount / 100));
       let discountApplied = false;
       for (const item of cart) {
-        const itemDiscount = !discountApplied ? transactionDiscount : 0;
+        const itemDiscount = !discountApplied ? totalDiscountNominal : 0;
         await postSale({
           productId: item.productId,
           quantity: item.quantity,
@@ -410,20 +411,26 @@ export default function InputPenjualan() {
                 </div>
                 
                 <div className="form-group" style={{ margin: '1rem 0' }}>
-                  <label className="form-label" style={{ fontSize: '0.85rem' }}>Diskon Transaksi (Rp)</label>
+                  <label className="form-label" style={{ fontSize: '0.85rem' }}>Diskon Transaksi (%)</label>
                   <input
                     type="number"
                     className="form-input"
                     value={transactionDiscount || ''}
-                    onChange={(e) => setTransactionDiscount(Math.max(0, Number(e.target.value)))}
+                    onChange={(e) => setTransactionDiscount(Math.min(100, Math.max(0, Number(e.target.value))))}
                     min="0"
+                    max="100"
                     placeholder="0"
                   />
+                  {transactionDiscount > 0 && (
+                    <div style={{ fontSize: '0.75rem', color: 'var(--red)', marginTop: '4px' }}>
+                      Potongan: {formatRupiah(Math.floor(cartTotal * (transactionDiscount / 100)))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="cart-total" style={{ color: 'var(--accent-primary)', fontSize: '1.2rem', fontWeight: 'bold' }}>
                   <span>Total Akhir</span>
-                  <span>{formatRupiah(Math.max(0, cartTotal - transactionDiscount))}</span>
+                  <span>{formatRupiah(Math.max(0, cartTotal - Math.floor(cartTotal * (transactionDiscount / 100))))}</span>
                 </div>
                 <button
                   className="btn btn-primary btn-submit-all"
