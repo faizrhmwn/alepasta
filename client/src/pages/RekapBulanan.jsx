@@ -45,41 +45,6 @@ export default function RekapBulanan() {
     null
   )
 
-  function downloadCSV() {
-    if (!dailyBreakdown || dailyBreakdown.length === 0) {
-      showToast('Tidak ada data untuk didownload', 'error')
-      return
-    }
-
-    const headers = ['Tanggal', 'Total Item Terjual', 'Omset (Rp)']
-    const rows = dailyBreakdown.map(day => [
-      day.date,
-      day.items,
-      day.revenue
-    ])
-
-    rows.push([])
-    rows.push(['TOTAL', summary.totalItems, summary.totalRevenue])
-    rows.push(['Cash', '', summary.totalCash || 0])
-    rows.push(['QRIS', '', summary.totalQris || 0])
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(r => r.join(','))
-    ].join('\n')
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    const url = URL.createObjectURL(blob)
-    link.setAttribute('href', url)
-    link.setAttribute('download', `Laporan_Alepasta_${selectedMonth}.csv`)
-    link.style.visibility = 'hidden'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    showToast('Laporan berhasil didownload', 'success')
-  }
-
   return (
     <div className="animate-in">
       <div className="rekap-nav">
@@ -105,11 +70,6 @@ export default function RekapBulanan() {
           ▶
         </button>
         <span className="rekap-date-display">{formatMonth(selectedMonth)}</span>
-        <div style={{ marginLeft: 'auto' }}>
-          <button className="btn btn-primary" onClick={downloadCSV} disabled={loading || dailyBreakdown.length === 0}>
-            📥 Download Excel (CSV)
-          </button>
-        </div>
       </div>
 
       {loading ? (

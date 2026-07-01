@@ -330,6 +330,20 @@ router.get('/dashboard', async (req, res) => {
 
     const thisMonth = monthStatsRows[0] || { revenue: 0, items: 0, transactions: 0 };
 
+    // Last month stats
+    const dateObj = new Date(today);
+    const lastMonthStart = new Date(dateObj.getFullYear(), dateObj.getMonth() - 1, 1).toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+    const lastMonthEnd = new Date(dateObj.getFullYear(), dateObj.getMonth(), 0).toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+    
+    const lastMonthStatsRows = await db
+      .select({
+        revenue: sum(sales.totalPrice).mapWith(Number),
+      })
+      .from(sales)
+      .where(between(sales.saleDate, lastMonthStart, lastMonthEnd));
+      
+    const lastMonth = lastMonthStatsRows[0] || { revenue: 0 };
+
     // Top 5 products today by quantity
     const topProducts = await db
       .select({
@@ -400,6 +414,9 @@ router.get('/dashboard', async (req, res) => {
           revenue: thisMonth.revenue || 0,
           items: thisMonth.items || 0,
           transactions: thisMonth.transactions || 0,
+        },
+        lastMonth: {
+          revenue: lastMonth.revenue || 0,
         },
         topProducts,
         recentSales,

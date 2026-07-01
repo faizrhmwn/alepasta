@@ -137,6 +137,7 @@ export default function Dashboard() {
   const {
     today: todayData,
     thisMonth,
+    lastMonth,
     topProducts,
     weeklyTrend,
     recentSales,
@@ -157,6 +158,20 @@ export default function Dashboard() {
       } else if (diff < 0) {
         revenueTrend = { direction: 'down', value: `${percentage}% vs kemarin` }
       }
+    }
+  }
+
+  let monthTrend = null
+  const thisMonthRevenue = thisMonth?.revenue || 0
+  const lastMonthRevenue = lastMonth?.revenue || 0
+
+  if (lastMonthRevenue > 0) {
+    const diffMonth = thisMonthRevenue - lastMonthRevenue
+    const percentageMonth = Math.round(Math.abs(diffMonth) / lastMonthRevenue * 100)
+    if (diffMonth > 0) {
+      monthTrend = { direction: 'up', value: `${percentageMonth}% vs bulan lalu` }
+    } else if (diffMonth < 0) {
+      monthTrend = { direction: 'down', value: `${percentageMonth}% vs bulan lalu` }
     }
   }
 
@@ -192,6 +207,7 @@ export default function Dashboard() {
           icon="💰"
           title="Pendapatan Bulan Ini"
           value={formatRupiah(thisMonth?.revenue)}
+          trend={monthTrend}
           delay={200}
           color="#27AE60"
         />
