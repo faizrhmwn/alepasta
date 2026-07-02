@@ -24,7 +24,7 @@ export default function KelolaMenu() {
 
   function fetchProducts() {
     setLoading(true)
-    getProducts(true)
+    getProducts() // includeAll = false
       .then(setProducts)
       .catch((err) => showToast(err.message, 'error'))
       .finally(() => setLoading(false))
@@ -72,12 +72,11 @@ export default function KelolaMenu() {
   }
 
   async function handleToggleActive(id, currentStatus) {
-    const actionText = currentStatus ? 'menonaktifkan (hapus dari daftar jual)' : 'mengaktifkan kembali';
-    if (!window.confirm(`Yakin ingin ${actionText} produk ini? (Data penjualan lama akan tetap aman)`)) return
+    if (!window.confirm(`Yakin ingin menghapus produk ini dari menu? (Data penjualan lama akan tetap aman)`)) return
     
     try {
       await toggleProductActive(id, !currentStatus)
-      showToast(`Status produk berhasil diubah`, 'success')
+      showToast(`Produk berhasil dihapus`, 'success')
       fetchProducts()
     } catch (err) {
       showToast(err.message, 'error')
@@ -159,9 +158,6 @@ export default function KelolaMenu() {
                   <th onClick={() => requestSort('price')} style={{ cursor: 'pointer', userSelect: 'none', textAlign: 'right' }}>
                     Harga{getSortIndicator('price')}
                   </th>
-                  <th onClick={() => requestSort('isActive')} style={{ cursor: 'pointer', userSelect: 'none', textAlign: 'center' }}>
-                    Status{getSortIndicator('isActive')}
-                  </th>
                   <th style={{ textAlign: 'right' }}>Aksi</th>
                 </tr>
               </thead>
@@ -176,11 +172,6 @@ export default function KelolaMenu() {
                         </span>
                       </td>
                       <td style={{ textAlign: 'right' }}>{formatRupiah(p.price)}</td>
-                      <td style={{ textAlign: 'center' }}>
-                        <span className={`status-badge ${p.isActive ? 'active' : 'inactive'}`}>
-                          {p.isActive ? 'Aktif' : 'Nonaktif'}
-                        </span>
-                      </td>
                       <td style={{ textAlign: 'right' }}>
                         <div className="action-buttons">
                           <button className="btn-action edit" onClick={() => handleOpenModal(p)} title="Edit">
@@ -189,9 +180,9 @@ export default function KelolaMenu() {
                           <button 
                             className="btn-action delete" 
                             onClick={() => handleToggleActive(p.id, p.isActive)}
-                            title={p.isActive ? "Nonaktifkan" : "Aktifkan Kembali"}
+                            title="Hapus"
                           >
-                            {p.isActive ? "🗑️" : "🔄"}
+                            🗑️
                           </button>
                         </div>
                       </td>
@@ -199,7 +190,7 @@ export default function KelolaMenu() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>Belum ada produk.</td>
+                    <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Belum ada produk.</td>
                   </tr>
                 )}
               </tbody>
