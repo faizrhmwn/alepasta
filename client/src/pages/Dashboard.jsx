@@ -150,14 +150,21 @@ export default function Dashboard() {
     const yesterdayData = weeklyTrend[weeklyTrend.length - 2]
     const yesterdayRevenue = yesterdayData?.revenue || 0
     
-    if (yesterdayRevenue > 0) {
-      const diff = todayRevenue - yesterdayRevenue
-      const percentage = Math.round(Math.abs(diff) / yesterdayRevenue * 100)
-      if (diff > 0) {
-        revenueTrend = { direction: 'up', value: `${percentage}% vs kemarin` }
-      } else if (diff < 0) {
-        revenueTrend = { direction: 'down', value: `${percentage}% vs kemarin` }
-      }
+    const diff = todayRevenue - yesterdayRevenue
+    let percentage = 0;
+    
+    if (yesterdayRevenue === 0) {
+      percentage = todayRevenue > 0 ? 100 : 0;
+    } else {
+      percentage = Math.round(Math.abs(diff) / yesterdayRevenue * 100)
+    }
+
+    if (diff > 0) {
+      revenueTrend = { direction: 'up', value: `${percentage}% vs kemarin` }
+    } else if (diff < 0) {
+      revenueTrend = { direction: 'down', value: `${percentage}% vs kemarin` }
+    } else {
+      revenueTrend = { direction: 'up', value: `0% vs kemarin` }
     }
   }
 
