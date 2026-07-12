@@ -10,7 +10,7 @@ async function fetchAPI(endpoint, options = {}) {
     ...options,
   }
   const res = await fetch(`${BASE_URL}${endpoint}`, config)
-  if (res.status === 401) {
+  if (res.status === 401 && endpoint !== '/auth/login') {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     window.location.href = '/login'
