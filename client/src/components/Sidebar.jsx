@@ -6,6 +6,7 @@ const navItems = [
   { path: '/input', icon: '➕', label: 'Input Penjualan' },
   { path: '/rekap-harian', icon: '📋', label: 'Rekap Harian' },
   { path: '/rekap-bulanan', icon: '📅', label: 'Rekap Bulanan' },
+  { path: '/bagi-hasil', icon: '💰', label: 'Bagi Hasil' },
   { path: '/grafik', icon: '📈', label: 'Grafik' },
   { path: '/kelola-menu', icon: '🍔', label: 'Kelola Menu' },
 ]

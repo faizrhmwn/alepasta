@@ -9,6 +9,7 @@ const pageTitles = {
   '/input': 'Input Penjualan',
   '/rekap-harian': 'Rekap Harian',
   '/rekap-bulanan': 'Rekap Bulanan',
+  '/bagi-hasil': 'Bagi Hasil & Modal',
   '/grafik': 'Grafik & Analisis',
   '/kelola-menu': 'Kelola Menu',
 }
