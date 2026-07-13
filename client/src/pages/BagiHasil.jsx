@@ -53,6 +53,7 @@ export default function BagiHasil() {
             value={profitMargin}
             onChange={(e) => setProfitMargin(parseInt(e.target.value))}
             className="margin-slider"
+            style={{ background: `linear-gradient(to right, #27AE60 ${profitMargin}%, var(--glass-border) ${profitMargin}%)` }}
           />
           <div className="slider-values">
             <span className="profit-label">Laba: {profitMargin}%</span>

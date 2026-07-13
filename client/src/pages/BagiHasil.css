@@ -33,7 +33,6 @@
 .margin-slider {
   width: 100%;
   appearance: none;
-  background: var(--bg-darker);
   height: 8px;
   border-radius: 4px;
   outline: none;
