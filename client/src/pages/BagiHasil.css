@@ -9,8 +9,6 @@
 }
 
 .margin-control {
-  background: linear-gradient(145deg, rgba(30,30,35,0.7) 0%, rgba(20,20,25,0.9) 100%);
-  border: 1px solid var(--glass-border);
   padding: 1.5rem 2rem;
 }
 
