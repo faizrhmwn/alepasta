@@ -84,6 +84,7 @@ export default function KelolaMenu() {
   }
 
   const displayedProducts = [...products]
+    .filter(p => p.category !== 'Archived')
     .filter(p => {
        if (filterCategory === 'all') return true
        const c = p.category.toString().toLowerCase().replace(/[^a-z0-9]/g, '')

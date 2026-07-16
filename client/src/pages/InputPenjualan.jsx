@@ -34,7 +34,7 @@ export default function InputPenjualan() {
   const [transactionDiscount, setTransactionDiscount] = useState(0)
 
   // Separate main products and toppings
-  const mainProducts = products.filter(p => p.category !== 'topping')
+  const mainProducts = products.filter(p => p.category !== 'topping' && p.category !== 'Archived')
   const toppingProducts = products.filter(p => p.category === 'topping')
 
   // Group main products by category
