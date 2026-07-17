@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Layar TV Alepasta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,800;1,800;1,900&family=Knewave&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Prachason Neue Mon';
+            src: local('Prachason Neue Mon');
+        }
+
+        :root {
+            --red: #da291c;
+            --cream: #efebe1;
+            --yellow: #ffc72c;
+            --dark: #1a1a1a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #b0a8a0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* ── SCREEN UI ── */
+        #screenUI {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-primary { background: var(--red); color: var(--cream); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(218, 41, 28, 0.4); }
+
+        /* ── MENU TV CONTAINER ── */
+        .tv-container {
+            width: 1920px;
+            height: 1080px;
+            min-width: 1920px;
+            min-height: 1080px;
+            background-color: var(--cream);
+            background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%3Cg%20transform%3D%22translate%2850%2C55%29%22%20opacity%3D%220.12%22%3E%3Cellipse%20cx%3D%220%22%20cy%3D%22-14%22%20rx%3D%2218%22%20ry%3D%2210%22%20fill%3D%22%23f14e06%22%2F%3E%3Cellipse%20cx%3D%22-6%22%20cy%3D%22-18%22%20rx%3D%222%22%20ry%3D%221.3%22%20fill%3D%22%23c73c02%22%2F%3E%3Cellipse%20cx%3D%223%22%20cy%3D%22-20%22%20rx%3D%222%22%20ry%3D%221.3%22%20fill%3D%22%23c73c02%22%2F%3E%3Cellipse%20cx%3D%2210%22%20cy%3D%22-17%22%20rx%3D%222%22%20ry%3D%221.3%22%20fill%3D%22%23c73c02%22%2F%3E%3Cellipse%20cx%3D%220%22%20cy%3D%22-5%22%20rx%3D%2220%22%20ry%3D%224%22%20fill%3D%22%237ab648%22%2F%3E%3Crect%20x%3D%22-18%22%20y%3D%22-1%22%20width%3D%2236%22%20height%3D%227%22%20rx%3D%223%22%20fill%3D%22%237a3b10%22%2F%3E%3Cellipse%20cx%3D%220%22%20cy%3D%2210%22%20rx%3D%2218%22%20ry%3D%227%22%20fill%3D%22%23f14e06%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28150%2C55%29%22%20opacity%3D%220.12%22%3E%3Crect%20x%3D%22-20%22%20y%3D%22-8%22%20width%3D%2240%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23f14e06%22%20transform%3D%22rotate%28-15%29%22%2F%3E%3Crect%20x%3D%22-22%22%20y%3D%22-4%22%20width%3D%2244%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%237a3b10%22%20transform%3D%22rotate%28-15%29%22%2F%3E%3Cpath%20d%3D%22M-15%2C-3%20Q-10%2C-6%20-5%2C-3%20Q0%2C-6%205%2C-3%20Q10%2C-6%2015%2C-3%22%20fill%3D%22none%22%20stroke%3D%22%23efebe1%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20transform%3D%22rotate%28-15%29%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2850%2C145%29%22%20opacity%3D%220.12%22%3E%3Crect%20x%3D%22-20%22%20y%3D%22-8%22%20width%3D%2240%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23f14e06%22%20transform%3D%22rotate%28-15%29%22%2F%3E%3Crect%20x%3D%22-22%22%20y%3D%22-4%22%20width%3D%2244%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%237a3b10%22%20transform%3D%22rotate%28-15%29%22%2F%3E%3Cpath%20d%3D%22M-15%2C-3%20Q-10%2C-6%20-5%2C-3%20Q0%2C-6%205%2C-3%20Q10%2C-6%2015%2C-3%22%20fill%3D%22none%22%20stroke%3D%22%23efebe1%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20transform%3D%22rotate%28-15%29%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28150%2C145%29%22%20opacity%3D%220.12%22%3E%3Cellipse%20cx%3D%220%22%20cy%3D%225%22%20rx%3D%2222%22%20ry%3D%229%22%20fill%3D%22%23f14e06%22%2F%3E%3Cpath%20d%3D%22M-14%2C-6%20Q-4%2C3%205%2C-4%20Q14%2C3%2017%2C-2%22%20fill%3D%22none%22%20stroke%3D%22%23efebe1%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M-13%2C-1%20Q-3%2C6%206%2C-1%20Q13%2C5%2016%2C1%22%20fill%3D%22none%22%20stroke%3D%22%23efebe1%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22-22%22%20x2%3D%220%22%20y2%3D%22-2%22%20stroke%3D%22%23c73c02%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22-4%22%20y1%3D%22-22%22%20x2%3D%22-4%22%20y2%3D%22-14%22%20stroke%3D%22%23c73c02%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%224%22%20y1%3D%22-22%22%20x2%3D%224%22%20y2%3D%22-14%22%20stroke%3D%22%23c73c02%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22-4%22%20y1%3D%22-14%22%20x2%3D%224%22%20y2%3D%22-14%22%20stroke%3D%22%23c73c02%22%20stroke-width%3D%221.5%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── TOP HERO ── */
+        .hero {
+            background: var(--red);
+            padding: 20px 40px 15px; 
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-brand {
+            font-family: 'Knewave', cursive;
+            font-size: 95px;
+            font-weight: 400;
+            color: var(--cream);
+            letter-spacing: 5px;
+            line-height: 1.1; 
+            margin-bottom: 10px; 
+            text-shadow: 4px 4px 0 #1a1a1a;
+        }
+        .hero-tagline {
+            font-family: 'Knewave', cursive;
+            font-size: 28px; 
+            color: var(--yellow);
+            letter-spacing: 2px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 0 #1a1a1a;
+        }
+
+        .menu-body {
+            flex: 1;
+            padding: 20px 30px; 
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0; 
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 2fr 2fr 2fr 3fr;
+            gap: 25px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .cat-block {
+            display: flex;
+            flex-direction: column;
+            min-width: 0; 
+            min-height: 0;
+        }
+
+        .cat-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+        .cat-title {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--red);
+            white-space: nowrap;
+        }
+        .cat-line {
+            height: 3px;
+            flex-grow: 1;
+            background: var(--red);
+            opacity: 0.2;
+        }
+
+        /* Items row */
+        .items-row {
+            display: grid;
+            gap: 15px;
+            flex: 1;
+            min-height: 0;
+            grid-auto-rows: minmax(0, 1fr);
+        }
+
+        /* Item card */
+        .item-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            flex: 1;
+            min-height: 0;
+        }
+        .item-photo {
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            background: #e8e4db;
+        }
+        .item-photo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .item-meta {
+            padding: 5px 8px; 
+            text-align: center;
+            flex-shrink: 0;
+            background: white;
+        }
+        .item-name {
+            font-family: 'Prachason Neue Mon', 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px; 
+            font-weight: 800;
+            text-transform: capitalize; 
+            color: var(--dark);
+            line-height: 1.2;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            height: auto; 
+        }
+        .item-price {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--red);
+            line-height: 1;
+        }
+        .bs-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--yellow);
+            color: var(--red);
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--red);
+            padding: 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+        .footer-tagline {
+            font-family: 'Knewave', cursive;
+            color: var(--yellow);
+            font-size: 30px;
+            letter-spacing: 2px;
+            text-transform: capitalize;
+            text-shadow: 2px 2px 0 #1a1a1a;
+        }
+        .footer-info {
+            display: flex;
+            gap: 25px;
+            color: var(--cream);
+            font-size: 18px; 
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            align-items: center;
+        }
+        .footer-info span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap; /* Mencegah elemen info pecah/turun baris */
+        }
+        .footer-icon {
+            width: 24px;
+            height: 24px;
+            fill: var(--cream);
+            display: block;
+        }
+        .grab-icon {
+            height: 17px; 
+            width: 46px; 
+            fill: var(--cream);
+            display: block;
+        }
+        .footer-info span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="screenUI">
+    <button onclick="downloadPNG()" class="btn btn-primary" id="downloadBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Download PNG (Resolusi 3x)
+    </button>
+</div>
+
+<div class="tv-container" id="tvMenu">
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-brand">Alepasta</div>
+        <div class="hero-tagline">Your Daily Homemade Pasta</div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-body">
+        <div class="menu-grid" id="menuBody"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-tagline">Forget Your Diet, Come and Try It</div>
+        <div class="footer-info">
+            <span>
+                <svg class="footer-icon" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                @alepasta.co
+            </span>
+            <span>|</span>
+            <span>
+                <svg class="footer-icon" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+                0813-9010-8787
+            </span>
+            <span>|</span>
+            <span>
+                <svg class="grab-icon" viewBox="0 7.3 23.5 8.8"><path fill="currentColor" d="M23.129 10.863a2.93 2.93 0 0 0-2.079-.872c-.57 0-1.141.212-1.455.421c-.651.434-1.186.904-2.149 2.148v.894c.817-1.064 1.59-1.903 2.177-2.364c.386-.31.933-.501 1.427-.501c1.275 0 2.352 1.077 2.352 2.352v.538c0 .63-.247 1.223-.698 1.668a2.34 2.34 0 0 1-1.654.685c-1.048 0-1.97-.719-2.22-1.701l-.422.51c.307 1.03 1.417 1.789 2.642 1.789a2.93 2.93 0 0 0 2.079-.872c.562-.562.871-1.3.871-2.079v-.538c0-.778-.31-1.517-.871-2.078m-12.8-.274c.406 0 .757.087 1.074.266a5 5 0 0 1 .411-.449c-.335-.256-.903-.415-1.485-.415c-.83 0-1.584.3-2.122.843c-.534.54-.83 1.287-.83 2.107v3.489h.598v-3.49c0-1.385.968-2.352 2.354-2.352m5.678 5.84V12.94c0-1.072-.84-1.913-1.913-1.913c-.5 0-.976.203-1.343.57a1.9 1.9 0 0 0-.57 1.343v.538c0 1.037.877 1.913 1.913 1.913c.285 0 .671-.07.908-.264v-.631c-.232.187-.57.298-.908.298a1.3 1.3 0 0 1-1.315-1.316v-.538a1.3 1.3 0 0 1 1.315-1.314a1.3 1.3 0 0 1 1.316 1.314v3.489zM0 12.596v.193c0 1.036.393 2.003 1.107 2.722a3.76 3.76 0 0 0 2.689 1.112c.82 0 1.548-.186 2.162-.551c.506-.302.73-.607.75-.635V12.22H3.65v.597h2.46v2.434l-.002.002c-.288.288-.972.77-2.312.77a3.17 3.17 0 0 1-2.279-.938a3.25 3.25 0 0 1-.92-2.297v-.193c0-.83.375-1.656 1.026-2.269a3.56 3.56 0 0 1 2.442-.967c.847 0 1.438.129 1.913.416v-.67c-.494-.21-1.085-.305-1.913-.305C1.862 8.8 0 10.538 0 12.595m10.329-.968q.341 0 .571.112c.075-.186.151-.339.262-.525c-.162-.116-.549-.186-.833-.186c-1.09 0-1.913.823-1.913 1.913v3.489h.598v-3.49c0-.774.54-1.314 1.315-1.314m-4.351-.702v-.707c-.541-.29-1.131-.419-1.913-.419c-.799 0-1.555.293-2.132.824c-.577.532-.895 1.233-.895 1.972v.193c0 1.542 1.237 2.796 2.758 2.796c1.237 0 1.745-.405 1.874-.533v-1.794H3.65v.598h1.46v.899l-.005.001c-.187.075-.578.231-1.31.231a2.13 2.13 0 0 1-1.528-.636a2.2 2.2 0 0 1-.632-1.562v-.193c0-1.192 1.113-2.198 2.43-2.198c.91 0 1.45.147 1.913.528m14.105 1.126c.27-.27.623-.424.967-.424a1.3 1.3 0 0 1 1.315 1.314v.538c0 .738-.578 1.316-1.315 1.316c-.357 0-.702-.196-.972-.55a2.15 2.15 0 0 1-.418-1.12l-.484.591c.095.452.33.885.665 1.19c.344.313.774.486 1.209.486a1.915 1.915 0 0 0 1.913-1.913v-.538c0-.499-.202-.977-.57-1.343a1.9 1.9 0 0 0-1.343-.57c-.316 0-.818.114-1.417.652l-.002.002c-.16.16-.536.536-.765.804c-.384.42-.943 1.054-1.42 1.688v.933c.529-.68.833-1.06 1.33-1.634c.445-.519.996-1.15 1.307-1.422m-8.939 1.428c0 .779.31 1.517.872 2.08a2.93 2.93 0 0 0 2.078.87c.33 0 .669-.07.908-.188v-.597a2.5 2.5 0 0 1-.908.188c-1.274 0-2.352-1.077-2.352-2.353v-.538c0-1.275 1.078-2.352 2.352-2.352a2.34 2.34 0 0 1 2.353 2.353v3.488h.598v-3.604a2.98 2.98 0 0 0-.915-2.006a2.92 2.92 0 0 0-2.036-.83c-.778 0-1.516.31-2.078.873a2.93 2.93 0 0 0-.872 2.078zm6.918-2.313a5 5 0 0 1 .596-.631V7.378h-.596zm1.037-.876V7.378h.597V9.88a3.6 3.6 0 0 0-.597.41"/></svg>
+                Food
+            </span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const menuCategories = {
+        "Pasta": [
+            { nama: "Aglio e Olio", harga: "10k", img: "aglioeolio.png" },
+            { nama: "Alfredo", harga: "10k", img: "alfredo.png" },
+            { nama: "Bolognese", harga: "10k", img: "bolognese.png" },
+            { nama: "Mac & Cheese", harga: "10k", img: "macncheese.png" }
+        ],
+        "Rice": [
+            { nama: "Alepasta Bowl", harga: "12k", img: "alepasta-bowl.png" },
+            { nama: "Bolognese Bowl", harga: "12k", img: "bolognese-bowl.png" },
+            { nama: "Curry Bowl", harga: "12k", img: "curry-bowl.png" }
+        ],
+        "Salad": [
+            { nama: "Simple Green", harga: "10k", img: "simple-green.png" },
+            { nama: "Egg-tra Green", harga: "13k", img: "eggtra-green.png" },
+            { nama: "Signature Green", harga: "15k", img: "signature-green.png" }
+        ],
+        "Side": [
+            { nama: "Burger", harga: "10k", img: "burger.png" },
+            { nama: "Classic Dog", harga: "10k", img: "classic-dog.png" },
+            { nama: "Chicken Wrap", harga: "12k", img: "wrap.png" },
+            { nama: "Bolognese Dog", harga: "13k", img: "bolognese-dog.png" },
+            { nama: "Bolognese Fries", harga: "15k", img: "bolognese-fries.png" },
+            { nama: "Burger w/Fries", harga: "15k", img: "burgerwfries.png" },
+            { nama: "Cheesy Fries", harga: "15k", img: "cheesy-fries.png" },
+            { nama: "Combo", harga: "15k", img: "combo.png" }
+        ],
+        "Beverage": [
+            { nama: "Blue Ocean Lemon", harga: "7k", img: "blue-ocean.png" },
+            { nama: "Lemon Tea", harga: "7k", img: "lemon-tea.png" },
+            { nama: "Matcha", harga: "9k", img: "matcha.png" },
+            { nama: "Milo", harga: "9k", img: "milo.png" }
+        ],
+        "A La Carte": [
+            { nama: "Ayam Crispy", harga: "6k", img: "ayam-carte.png" },
+            { nama: "Smoked Beef", harga: "5k", img: "smoked-beef.png" },
+            { nama: "Alepasta Sauce", harga: "3k", img: "alepasta-sauce.png" },
+            { nama: "Cheese Sauce", harga: "3k", img: "cheese-sauce.png" },
+            { nama: "Spicy Mayo", harga: "3k", img: "spicy-mayo.png" }
+        ]
+    };
+
+    const bestSellers = ["Mac & Cheese", "Curry Bowl", "Signature Green", "Burger", "Milo"];
+    const body = document.getElementById('menuBody');
+
+    // 4 Custom Columns for perfect 3-row layout
+    const blocks = [
+        { title: 'PASTA', cols: 2, items: menuCategories['Pasta'] },
+        { title: 'RICE & SALAD', cols: 2, items: [...menuCategories['Rice'], ...menuCategories['Salad']] },
+        { title: 'SIDE', cols: 2, items: menuCategories['Side'] },
+        { title: 'BEV & OTHER', cols: 3, items: [...menuCategories['Beverage'], ...menuCategories['A La Carte']] }
+    ];
+
+    blocks.forEach(block => {
+        let cardsHtml = block.items.map(item => {
+            const isBs = bestSellers.includes(item.nama);
+            return `
+                <div class="item-card">
+                    <div class="item-photo">
+                        <img crossorigin="anonymous" src="assets/img/${item.img}" alt="${item.nama}" onerror="this.src='https://placehold.co/800x800/efebe1/da291c?text=${item.nama.charAt(0)}'">
+                    </div>
+                    <div class="item-meta">
+                        <div class="item-name">${item.nama}</div>
+                        <div class="item-price">${item.harga}</div>
+                    </div>
+                    ${isBs ? '<div class="bs-dot">★ BS</div>' : ''}
+                </div>`;
+        }).join('');
+
+        // Kotak Topping dihapus
+
+        const colDiv = document.createElement('div');
+        colDiv.className = 'cat-block';
+        colDiv.innerHTML = `
+            <div class="cat-title-row">
+                <div class="cat-title">${block.title}</div>
+                <div class="cat-line"></div>
+            </div>
+            <div class="items-row" style="grid-template-columns: repeat(${block.cols}, 1fr);">
+                ${cardsHtml}
+            </div>
+        `;
+        body.appendChild(colDiv);
+    });
+
+    function downloadPNG() {
+        if (window.location.protocol === 'file:') {
+            alert('Pastikan membuka pakai Live Server di VS Code agar fitur download PNG 3x skala ini tidak error.');
+        }
+
+        const btn = document.getElementById('downloadBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Rendering (Please wait...)';
+        btn.style.opacity = '0.7';
+        btn.disabled = true;
+
+        const tvMenu = document.getElementById('tvMenu');
+        html2canvas(tvMenu, {
+            scale: 3, // Resolusi tinggi 5760x3240
+            useCORS: true,
+            backgroundColor: '#efebe1'
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Menu_TV_Alepasta_1920x1080.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.disabled = false;
+        }).catch(err => {
+            alert('Gagal mendownload PNG: ' + err);
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.disabled = false;
+        });
+    }
+</script>
+</body>
+</html>

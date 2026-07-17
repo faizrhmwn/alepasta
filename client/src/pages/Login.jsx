@@ -33,7 +33,7 @@ export default function Login() {
         <div className="login-card-accent" />
         <div className="login-card-body">
           <div className="login-brand">
-            <img src="/logo.png" alt="Alepasta Logo" className="login-logo-img" />
+            <img src="/logo-alepasta.png" alt="Alepasta Logo" className="login-logo-img" />
           </div>
           <form onSubmit={handleSubmit}>
             <div className="login-input-group">

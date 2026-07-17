@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, onClose }) {
       />
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
-          <img src="/logo.png" alt="Alepasta Logo" className="sidebar-logo-img" />
+          <img src="/logo-alepasta.png" alt="Alepasta Logo" className="sidebar-logo-img" />
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
