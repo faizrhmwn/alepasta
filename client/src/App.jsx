@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import InputPenjualan from './pages/InputPenjualan'
 import RekapHarian from './pages/RekapHarian'
 import RekapBulanan from './pages/RekapBulanan'
+import RekapRentang from './pages/RekapRentang'
 import BagiHasil from './pages/BagiHasil'
 import Grafik from './pages/Grafik'
 import KelolaMenu from './pages/KelolaMenu'
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/input" element={<InputPenjualan />} />
           <Route path="/rekap-harian" element={<RekapHarian />} />
           <Route path="/rekap-bulanan" element={<RekapBulanan />} />
+          <Route path="/rekap-rentang" element={<RekapRentang />} />
           <Route path="/bagi-hasil" element={<BagiHasil />} />
           <Route path="/grafik" element={<Grafik />} />
           <Route path="/kelola-menu" element={<KelolaMenu />} />

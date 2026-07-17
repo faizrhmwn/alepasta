@@ -70,6 +70,10 @@ export function getMonthlyRecap(month) {
   return fetchAPI(`/sales/monthly?month=${month}`)
 }
 
+export function getRangeRecap(startDate, endDate) {
+  return fetchAPI(`/sales/range?startDate=${startDate}&endDate=${endDate}`)
+}
+
 export function getChartData(from, to) {
   return fetchAPI(`/sales/chart?from=${from}&to=${to}`)
 }

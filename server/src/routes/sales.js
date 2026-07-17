@@ -255,6 +255,83 @@ router.get('/monthly', async (req, res) => {
   }
 });
 
+// ── GET /range ── Date Range recap ───────────────────────────────────────────────
+router.get('/range', async (req, res) => {
+  try {
+    const startDate = req.query.startDate || todayJakarta();
+    const endDate = req.query.endDate || todayJakarta();
+
+    // Daily breakdown
+    const dailyBreakdown = await db
+      .select({
+        date: sales.saleDate,
+        revenue: sum(sales.totalPrice).mapWith(Number),
+        items: sum(sales.quantity).mapWith(Number),
+      })
+      .from(sales)
+      .where(between(sales.saleDate, startDate, endDate))
+      .groupBy(sales.saleDate)
+      .orderBy(asc(sales.saleDate));
+
+    // Product breakdown
+    const productBreakdown = await db
+      .select({
+        productId: sales.productId,
+        productName: products.name,
+        category: products.category,
+        quantity: sum(sales.quantity).mapWith(Number),
+        revenue: sum(sales.totalPrice).mapWith(Number),
+      })
+      .from(sales)
+      .innerJoin(products, eq(sales.productId, products.id))
+      .where(between(sales.saleDate, startDate, endDate))
+      .groupBy(sales.productId, products.name, products.category)
+      .orderBy(desc(sum(sales.totalPrice)));
+
+    // Payment breakdown
+    const paymentBreakdownRows = await db
+      .select({
+        paymentMethod: sales.paymentMethod,
+        revenue: sum(sales.totalPrice).mapWith(Number)
+      })
+      .from(sales)
+      .where(between(sales.saleDate, startDate, endDate))
+      .groupBy(sales.paymentMethod);
+      
+    const totalCash = paymentBreakdownRows.find(r => r.paymentMethod === 'Cash')?.revenue || 0;
+    const totalQris = paymentBreakdownRows.find(r => r.paymentMethod === 'QRIS')?.revenue || 0;
+
+    // Summary
+    const totalRevenue = dailyBreakdown.reduce((s, d) => s + d.revenue, 0);
+    const totalItems = dailyBreakdown.reduce((s, d) => s + d.items, 0);
+    const daysWithSales = dailyBreakdown.length;
+    const avgPerDay = daysWithSales > 0 ? Math.round(totalRevenue / daysWithSales) : 0;
+
+    const rangeTransactions = await db
+      .select({
+        total: sql`count(distinct coalesce(${sales.transactionId}, cast(${sales.id} as varchar)))`.mapWith(Number),
+      })
+      .from(sales)
+      .where(between(sales.saleDate, startDate, endDate));
+
+    const totalTransactions = rangeTransactions[0]?.total || 0;
+
+    return res.json({
+      success: true,
+      data: {
+        startDate,
+        endDate,
+        dailyBreakdown,
+        productBreakdown,
+        summary: { totalRevenue, totalItems, avgPerDay, daysWithSales, totalCash, totalQris, totalTransactions },
+      },
+    });
+  } catch (err) {
+    console.error('Range recap error:', err);
+    return res.status(500).json({ success: false, error: 'Failed to fetch range recap' });
+  }
+});
+
 // ── GET /chart ── Chart data ────────────────────────────────────────────────────
 router.get('/chart', async (req, res) => {
   try {
