@@ -212,7 +212,7 @@ export default function RekapHarian() {
                       <th><span onClick={() => handleSort('productName')} style={{ cursor: 'pointer' }}>Produk{getSortIndicator('productName')}</span></th>
                       <th><span onClick={() => handleSort('category')} style={{ cursor: 'pointer' }}>Kategori{getSortIndicator('category')}</span></th>
                       <th style={{ textAlign: 'center' }}><span onClick={() => handleSort('quantity')} style={{ cursor: 'pointer' }}>Qty{getSortIndicator('quantity')}</span></th>
-                      <th style={{ textAlign: 'right' }}><span onClick={() => handleSort('unitPrice')} style={{ cursor: 'pointer' }}>Harga Satuan{getSortIndicator('unitPrice')}</span></th>
+                      <th className="hide-on-mobile" style={{ textAlign: 'right' }}><span onClick={() => handleSort('unitPrice')} style={{ cursor: 'pointer' }}>Harga Satuan{getSortIndicator('unitPrice')}</span></th>
                       <th style={{ textAlign: 'right' }}><span onClick={() => handleSort('totalPrice')} style={{ cursor: 'pointer' }}>Total{getSortIndicator('totalPrice')}</span></th>
                     </tr>
                   </thead>
@@ -229,7 +229,7 @@ export default function RekapHarian() {
                           </span>
                         </td>
                         <td style={{ textAlign: 'center' }}>{item.quantity}</td>
-                        <td style={{ textAlign: 'right' }}>
+                        <td className="hide-on-mobile" style={{ textAlign: 'right' }}>
                           {formatRupiah(item.unitPrice)}
                         </td>
                         <td style={{ textAlign: 'right' }}>
@@ -244,7 +244,7 @@ export default function RekapHarian() {
                       <td style={{ textAlign: 'center', fontWeight: 600 }}>
                         {summary.totalItems}
                       </td>
-                      <td />
+                      <td className="hide-on-mobile" />
                       <td style={{ textAlign: 'right', fontWeight: 600 }}>
                         {formatRupiah(summary.totalRevenue)}
                       </td>

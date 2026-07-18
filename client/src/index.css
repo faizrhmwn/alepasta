@@ -599,12 +599,22 @@ input[type="month"] {
   }
 
   .glass-table {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
   }
 
   .glass-table thead th,
   .glass-table tbody td {
-    padding: 0.5rem 0.625rem;
+    padding: 0.5rem 0.3rem;
+    word-break: break-word;
+  }
+  
+  .badge {
+    padding: 0.2rem 0.3rem;
+    font-size: 0.6rem;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
   }
 }
 
