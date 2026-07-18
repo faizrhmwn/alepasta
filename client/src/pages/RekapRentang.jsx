@@ -27,6 +27,8 @@ export default function RekapRentang() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+
   const fetchRecap = () => {
     if (startDate > endDate) {
       showToast('Tanggal mulai tidak boleh lebih dari tanggal akhir', 'error')

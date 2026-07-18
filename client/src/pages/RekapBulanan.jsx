@@ -22,6 +22,7 @@ export default function RekapBulanan() {
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
 
+
   useEffect(() => {
     setLoading(true)
     getMonthlyRecap(selectedMonth)
