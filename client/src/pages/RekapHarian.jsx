@@ -21,6 +21,8 @@ export default function RekapHarian() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+
   // Edit State
   const [editingSale, setEditingSale] = useState(null)
   const [editForm, setEditForm] = useState({ quantity: 1, orderType: 'Takeaway', paymentMethod: 'Cash', notes: '' })
@@ -58,6 +60,30 @@ export default function RekapHarian() {
 
   const summary = data?.summary || {}
   const items = data?.items || []
+
+  const handleSort = (key) => {
+    let direction = 'asc'
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc'
+    }
+    setSortConfig({ key, direction })
+  }
+
+  const sortedArray = [...items].sort((a, b) => {
+    if (!sortConfig.key) return 0
+    let aVal = a[sortConfig.key]
+    let bVal = b[sortConfig.key]
+    if (typeof aVal === 'string') aVal = aVal.toLowerCase()
+    if (typeof bVal === 'string') bVal = bVal.toLowerCase()
+    if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1
+    if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1
+    return 0
+  })
+
+  const getSortIndicator = (key) => {
+    if (sortConfig.key !== key) return ' ↕'
+    return sortConfig.direction === 'asc' ? ' ⬆' : ' ⬇'
+  }
   const records = data?.records || []
 
   async function handleDelete(id) {
@@ -183,15 +209,15 @@ export default function RekapHarian() {
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Produk</th>
-                      <th>Kategori</th>
-                      <th style={{ textAlign: 'center' }}>Qty</th>
-                      <th style={{ textAlign: 'right' }}>Harga Satuan</th>
-                      <th style={{ textAlign: 'right' }}>Total</th>
+                      <th><span onClick={() => handleSort('productName')} style={{ cursor: 'pointer' }}>Produk{getSortIndicator('productName')}</span></th>
+                      <th><span onClick={() => handleSort('category')} style={{ cursor: 'pointer' }}>Kategori{getSortIndicator('category')}</span></th>
+                      <th style={{ textAlign: 'center' }}><span onClick={() => handleSort('quantity')} style={{ cursor: 'pointer' }}>Qty{getSortIndicator('quantity')}</span></th>
+                      <th style={{ textAlign: 'right' }}><span onClick={() => handleSort('unitPrice')} style={{ cursor: 'pointer' }}>Harga Satuan{getSortIndicator('unitPrice')}</span></th>
+                      <th style={{ textAlign: 'right' }}><span onClick={() => handleSort('totalPrice')} style={{ cursor: 'pointer' }}>Total{getSortIndicator('totalPrice')}</span></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {items.map((item, idx) => (
+                    {sortedArray.map((item, idx) => (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>{item.productName}</td>

@@ -20,6 +20,8 @@ export default function RekapBulanan() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+
   useEffect(() => {
     setLoading(true)
     getMonthlyRecap(selectedMonth)
@@ -171,14 +173,14 @@ export default function RekapBulanan() {
                   <table className="glass-table">
                     <thead>
                       <tr>
-                        <th>Produk</th>
-                        <th>Kategori</th>
-                        <th style={{ textAlign: 'center' }}>Qty</th>
-                        <th style={{ textAlign: 'right' }}>Total</th>
+                        <th><span onClick={() => handleSort('productName')} style={{ cursor: 'pointer' }}>Produk{getSortIndicator('productName')}</span></th>
+                        <th><span onClick={() => handleSort('category')} style={{ cursor: 'pointer' }}>Kategori{getSortIndicator('category')}</span></th>
+                        <th style={{ textAlign: 'center' }}><span onClick={() => handleSort('quantity')} style={{ cursor: 'pointer' }}>Qty{getSortIndicator('quantity')}</span></th>
+                        <th style={{ textAlign: 'right' }}><span onClick={() => handleSort('revenue')} style={{ cursor: 'pointer' }}>Total{getSortIndicator('revenue')}</span></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {menuBreakdown.map((item, idx) => (
+                      {sortedArray.map((item, idx) => (
                         <tr key={idx}>
                           <td>{item.productName}</td>
                           <td>
