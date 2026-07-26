@@ -39,8 +39,9 @@ export default function InputPenjualan() {
 
   // Group main products by category
   const groupedProducts = mainProducts.reduce((acc, p) => {
-    if (!acc[p.category]) acc[p.category] = []
-    acc[p.category].push(p)
+    const catName = formatCategoryName(p.category)
+    if (!acc[catName]) acc[catName] = []
+    acc[catName].push(p)
     return acc
   }, {})
 
