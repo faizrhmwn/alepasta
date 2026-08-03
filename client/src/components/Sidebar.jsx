@@ -10,6 +10,7 @@ const navItems = [
   { path: '/bagi-hasil', icon: '💰', label: 'Bagi Hasil' },
   { path: '/grafik', icon: '📈', label: 'Grafik' },
   { path: '/kelola-menu', icon: '🍔', label: 'Kelola Menu' },
+  { path: '/ongkir', icon: '📍', label: 'Hitung Ongkir' },
 ]
 
 export default function Sidebar({ isOpen, onClose }) {

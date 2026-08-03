@@ -10,6 +10,7 @@ import RekapRentang from './pages/RekapRentang'
 import BagiHasil from './pages/BagiHasil'
 import Grafik from './pages/Grafik'
 import KelolaMenu from './pages/KelolaMenu'
+import HitungOngkir from './pages/HitungOngkir'
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/bagi-hasil" element={<BagiHasil />} />
           <Route path="/grafik" element={<Grafik />} />
           <Route path="/kelola-menu" element={<KelolaMenu />} />
+          <Route path="/ongkir" element={<HitungOngkir />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
