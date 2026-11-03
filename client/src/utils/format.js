@@ -41,6 +41,9 @@ export function getCategoryColor(category) {
     side: '#E74C3C',
     beverage: '#3498DB',
     alacarte: '#9B59B6',
+    toast: '#D35400',
+    snacks: '#E67E22',
+    toastsnacks: '#D35400',
     topping: '#95A5A6'
   }
   return colors[c] || '#E67E22'
@@ -60,6 +63,7 @@ export function getCategoryBadgeClass(category) {
   if (c === 'side') return 'badge-side'
   if (c === 'beverage') return 'badge-beverage'
   if (c === 'alacarte') return 'badge-alacarte'
+  if (c === 'toast' || c === 'snacks' || c === 'toastsnacks') return 'badge-toast'
   if (c === 'topping') return 'badge-topping'
   return 'badge-pasta'
 }
@@ -74,6 +78,9 @@ export function formatCategoryName(category) {
     side: 'Side',
     beverage: 'Beverage',
     alacarte: 'A La Carte',
+    toast: 'Toast & Snacks',
+    snacks: 'Toast & Snacks',
+    toastsnacks: 'Toast & Snacks',
     topping: 'Topping'
   }
   return names[c] || category.toString()

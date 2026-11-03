@@ -443,6 +443,11 @@ input[type="month"] {
   color: #3498DB;
 }
 
+.badge-toast {
+  background: rgba(211, 84, 0, 0.15);
+  color: #D35400;
+}
+
 .badge-alacarte {
   background: rgba(155, 89, 182, 0.15);
   color: #9B59B6;

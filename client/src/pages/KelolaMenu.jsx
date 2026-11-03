@@ -138,6 +138,7 @@ export default function KelolaMenu() {
                <option value="salad">Salad</option>
                <option value="side">Side</option>
                <option value="topping">Topping</option>
+                  <option value="toast">Toast & Snacks</option>
             </select>
          </div>
       </div>
