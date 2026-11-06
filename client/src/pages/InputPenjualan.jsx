@@ -28,6 +28,7 @@ export default function InputPenjualan() {
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
   const [spicyLevel, setSpicyLevel] = useState('Tidak Pedas')
+  const [popIceFlavor, setPopIceFlavor] = useState('Cokelat')
 
   // Cart & Discount
   const [cart, setCart] = useState([])
@@ -97,6 +98,9 @@ export default function InputPenjualan() {
     if (selectedProductData.category.toLowerCase() === 'pasta' && spicyLevel !== 'Tidak Pedas') {
       modifiers.push(`Pedas: ${spicyLevel}`)
     }
+    if (selectedProductData.name.toLowerCase().includes('pop ice')) {
+      modifiers.push(`Rasa: ${popIceFlavor}`)
+    }
 
     const toppingNames = selectedToppings.map(id => {
       const t = toppingProducts.find(t => t.id === id)
@@ -136,6 +140,7 @@ export default function InputPenjualan() {
     setNotes('')
     setSelectedToppings([])
     setSpicyLevel('Tidak Pedas')
+    setPopIceFlavor('Cokelat')
     showToast(`${selectedProductData.name} ditambahkan ke keranjang`, 'success')
   }
 
@@ -255,6 +260,7 @@ export default function InputPenjualan() {
                   setSelectedProduct(e.target.value)
                   setSelectedToppings([]) // Reset toppings when changing product
                   setSpicyLevel('Tidak Pedas') // Reset spicy level
+                  setPopIceFlavor('Cokelat')
                 }}
               >
                 <option value="">-- Pilih Produk --</option>
@@ -302,6 +308,23 @@ export default function InputPenjualan() {
                   <option value="Tidak Pedas">Tidak Pedas</option>
                   <option value="Sedang">Sedang</option>
                   <option value="Pedas">Pedas</option>
+                </select>
+              </div>
+            )}
+
+            {/* Flavor Selection - For Pop Ice Milky */}
+            {selectedProductData && selectedProductData.name.toLowerCase().includes('pop ice') && (
+              <div className="form-group">
+                <label className="form-label">🥤 Pilihan Rasa Pop Ice</label>
+                <select
+                  className="form-input"
+                  value={popIceFlavor}
+                  onChange={(e) => setPopIceFlavor(e.target.value)}
+                >
+                  <option value="Cokelat">🍫 Cokelat</option>
+                  <option value="Permen Karet">🍬 Permen Karet</option>
+                  <option value="Blueberry">🫐 Blueberry</option>
+                  <option value="Strawberry">🍓 Strawberry</option>
                 </select>
               </div>
             )}
